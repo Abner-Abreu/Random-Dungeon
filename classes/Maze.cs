@@ -7,23 +7,22 @@ public class Maze
     private int[,] _maze;
     private Random _random = new Random();
 
+    public int this[int i, int j]
+    {
+        get => _maze[i,j];
+        set => _maze[i,j] = value;
+    }
     public Maze(int width, int height)
     {
         //Width and Height most be odd or the algorithm BREAK
         if(width % 2 == 0) width++;
         if(height % 2 == 0) height++;
+
         _width = width + 2;
         _height = height + 2;
         _maze = new int[_height, _width];
 
-        // Initialize the maze with walls
-        for (int x = 0; x < _height; x++)
-        {
-            for (int y = 0; y < _width; y++)
-            {
-                _maze[x, y] = 0; // Initialize all cells as walls
-            }
-        }
+        
 
         // Generate the maze starting from (1, 1)
         GenerateMaze(1, 1);
@@ -31,6 +30,7 @@ public class Maze
 
     private void GenerateMaze(int xPosition, int yPosition)
     {
+        PrintMaze();
         _maze[xPosition, yPosition] = 1; // Marck cell as road
 
         // Possible directions: right, down, left, up
@@ -67,7 +67,7 @@ public class Maze
                 GenerateMaze(xNewPosition, yNewPosition);
             }
         }
-        CreateCycles(xPosition, yPosition);
+        CreateCycles(xPosition, yPosition);    
     }
 
     private void CreateCycles(int xPosition, int yPosition)
@@ -86,7 +86,7 @@ public class Maze
                 && _maze[xNewPosition, yNewPosition] == 1)
             {
                 // Randomly decide to create a cycle
-                if (_random.Next(6) == 0) // 20% chance to create a cycle
+                if (_random.Next(26) == 0) // 10% chance to create a cycle
                 {
                     // Remove the wall between the current cell and the adjacent visited cell
                     _maze[xPosition + xPossibleDirections[i] / 2, yPosition + yPossibleDirections[i] / 2] = 1;
@@ -102,9 +102,10 @@ public class Maze
             string row = "";
             for (int y = 0; y < _width; y++)
             {
-                row += (_maze[x,y] == 1 ? "  " : "██");
+                row += _maze[x,y] == 1 ? "  " : "██";
             }
             Console.WriteLine(row);
         }
+        Console.WriteLine();
     }
 }
