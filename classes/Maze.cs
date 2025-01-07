@@ -1,18 +1,18 @@
 ﻿namespace MazeGenerator;
 
-public class Maze
+public class GameBoard
 {
+    enum CellType
+    {
+        Wall,
+        Road,
+        Trap
+    }
     private int _width;
     private int _height;
-    private int[,] _maze;
+    private CellType[,] _maze;
     private Random _random = new Random();
-
-    public int this[int i, int j]
-    {
-        get => _maze[i,j];
-        set => _maze[i,j] = value;
-    }
-    public Maze(int width, int height)
+    public GameBoard(int width, int height)
     {
         //Width and Height most be odd or the algorithm BREAK
         if(width % 2 == 0) width++;
@@ -20,18 +20,18 @@ public class Maze
 
         _width = width + 2;
         _height = height + 2;
-        _maze = new int[_height, _width];
+        _maze = new CellType[_height, _width];
 
         
 
-        // Generate the maze starting from (1, 1)
+        // Generate the maze starting from (1, 1)"
         GenerateMaze(1, 1);
     }
 
     private void GenerateMaze(int xPosition, int yPosition)
     {
-        PrintMaze();
-        _maze[xPosition, yPosition] = 1; // Marck cell as road
+        //PrintMaze();
+        _maze[xPosition, yPosition] = CellType.Road; // Marck cell as road
 
         // Possible directions: right, down, left, up
         int[] xPossibleDirections = { 2, 0, -2, 0 };
@@ -63,7 +63,7 @@ public class Maze
                 _maze[xNewPosition, yNewPosition] == 0)
             {
                 // Remove the wall between the current cell and the new cell
-                _maze[xPosition + xDirection / 2, yPosition + yDirection / 2] = 1;
+                _maze[xPosition + xDirection / 2, yPosition + yDirection / 2] = CellType.Road;
                 GenerateMaze(xNewPosition, yNewPosition);
             }
         }
@@ -83,13 +83,13 @@ public class Maze
             // Check if the adjacent cell is visited
             if (xNewPosition >= 0 && xNewPosition < _height 
                 && yNewPosition >= 0 && yNewPosition < _width 
-                && _maze[xNewPosition, yNewPosition] == 1)
+                && _maze[xNewPosition, yNewPosition] == CellType.Road)
             {
                 // Randomly decide to create a cycle
                 if (_random.Next(26) == 0) // 10% chance to create a cycle
                 {
                     // Remove the wall between the current cell and the adjacent visited cell
-                    _maze[xPosition + xPossibleDirections[i] / 2, yPosition + yPossibleDirections[i] / 2] = 1;
+                    _maze[xPosition + xPossibleDirections[i] / 2, yPosition + yPossibleDirections[i] / 2] = CellType.Road;
                 }
             }
         }
@@ -102,7 +102,7 @@ public class Maze
             string row = "";
             for (int y = 0; y < _width; y++)
             {
-                row += _maze[x,y] == 1 ? "  " : "██";
+                row += _maze[x,y] == CellType.Road ? "  " : "██";
             }
             Console.WriteLine(row);
         }

@@ -1,7 +1,8 @@
 ﻿namespace PlayerUtils;
-
+using Others;
 public class Player 
 {
+    public Pair position = new Pair(0,0);
     private string _name;
     private string _playerClass;
     #region Stats

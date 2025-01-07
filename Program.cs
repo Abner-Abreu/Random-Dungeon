@@ -1,5 +1,6 @@
 ﻿using MazeGenerator;
 using PlayerUtils;
+using Others;
 class Program
 {
     enum playerClass {
@@ -95,7 +96,33 @@ class Program
         #endregion
 
         #region Generación del laberinto y preeliminares
-            
+        Console.Clear();
+        Console.WriteLine("Generando laberinto...");
+        GameBoard maze;
+        if(numberOfPlayers == 2)
+        {
+            maze = new GameBoard(15,15);
+        }
+        else
+        {
+            maze = new GameBoard(30,30);
+        }
+
+        Console.Clear();
+        Console.WriteLine("Colocando jugadores...");
+        if(numberOfPlayers == 2)
+        {
+            players[0].position = new Pair(1,1);
+            players[1].position = new Pair(15,15);
+        }
+        else
+        {
+            players[0].position = new Pair(1,1);
+            players[1].position = new Pair(1,30);
+            players[2].position = new Pair(30,1);
+            players[3].position = new Pair(30,30);
+        }
+
         #endregion
 
         #region Turnos

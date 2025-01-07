@@ -1,6 +1,13 @@
-﻿namespace Maze;
+﻿namespace Others;
 
-public class Class1
+public class Pair
 {
+    int first;
+    int second;
 
+    public Pair(int a, int b)
+    {
+        first = a;
+        second = b;
+    }
 }

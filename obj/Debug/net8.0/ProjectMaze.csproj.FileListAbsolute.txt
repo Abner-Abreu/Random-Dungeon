@@ -1,0 +1,4 @@
+C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\ProjectMaze.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\ProjectMaze.AssemblyInfoInputs.cache
+C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\ProjectMaze.AssemblyInfo.cs
+C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\ProjectMaze.csproj.CoreCompileInputs.cache
