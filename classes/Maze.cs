@@ -1,12 +1,13 @@
 ﻿namespace MazeGenerator;
-
+using Others;
 public class GameBoard
 {
-    enum CellType
+    public enum CellType
     {
         Wall,
         Road,
-        Trap
+        Trap,
+        Player
     }
     private int _width;
     private int _height;
@@ -26,6 +27,12 @@ public class GameBoard
 
         // Generate the maze starting from (1, 1)"
         GenerateMaze(1, 1);
+    }
+
+    public CellType this[Pair index]
+    {
+        get => _maze[index.first,index.second];
+        set => _maze[index.first,index.second] = value;
     }
 
     private void GenerateMaze(int xPosition, int yPosition)
@@ -102,7 +109,24 @@ public class GameBoard
             string row = "";
             for (int y = 0; y < _width; y++)
             {
-                row += _maze[x,y] == CellType.Road ? "  " : "██";
+                switch (_maze[x,y])
+                {
+                    case CellType.Road:
+                    {
+                        row += "  ";
+                        break;
+                    }
+                    case CellType.Wall:
+                    {
+                        row += "██";
+                        break;
+                    }
+                    case CellType.Player:
+                    {
+                        row += "🙂";
+                        break;
+                    }
+                }
             }
             Console.WriteLine(row);
         }

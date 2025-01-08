@@ -1,10 +1,26 @@
 ﻿namespace PlayerUtils;
 using Others;
+using MazeGenerator;
 public class Player 
 {
+    enum moveDirections
+    {
+        Up,
+        Down,
+        Rigth,
+        Left
+    }
+    Dictionary<moveDirections,Pair> DIRECTIONS_TO_MOVE = new Dictionary<moveDirections, Pair>()
+    {
+        {moveDirections.Up, new Pair(0,1)},
+        {moveDirections.Down, new Pair(0,-1)},
+        {moveDirections.Rigth, new Pair(1,0)},
+        {moveDirections.Left, new Pair(-1,0)}
+    };
     public Pair position = new Pair(0,0);
     private string _name;
     private string _playerClass;
+
     #region Stats
         int strength;
         int agility;
@@ -77,5 +93,16 @@ public class Player
         }
         return true;
     }
-
+    private void Move(GameBoard board, moveDirections direction)
+    {
+        if(ValidMove(board, direction))
+        {
+            position += DIRECTIONS_TO_MOVE[direction];
+        }
+    }
+    private bool ValidMove(GameBoard board, moveDirections direction)
+    {
+        Pair posiblePosition = position + DIRECTIONS_TO_MOVE[direction];
+        return board[posiblePosition] != GameBoard.CellType.Road;
+    }
 }

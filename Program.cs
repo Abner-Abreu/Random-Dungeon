@@ -105,7 +105,7 @@ class Program
         }
         else
         {
-            maze = new GameBoard(30,30);
+            maze = new GameBoard(31,31);
         }
 
         Console.Clear();
@@ -118,11 +118,16 @@ class Program
         else
         {
             players[0].position = new Pair(1,1);
-            players[1].position = new Pair(1,30);
-            players[2].position = new Pair(30,1);
-            players[3].position = new Pair(30,30);
+            players[1].position = new Pair(1,31);
+            players[2].position = new Pair(31,1);
+            players[3].position = new Pair(31,31);
+        }
+        foreach(Player player in players)
+        {
+            maze[player.position] = GameBoard.CellType.Player;
         }
 
+        maze.PrintMaze();
         #endregion
 
         #region Turnos
