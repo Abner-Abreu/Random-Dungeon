@@ -1,4 +1,4 @@
-﻿namespace Others;
+﻿namespace Pair_Type;
 
 public class Pair
 {
@@ -18,5 +18,14 @@ public class Pair
     public static Pair operator + (Pair a, Pair b)
     {
         return Add(a,b);
+    }
+
+    public static Pair MultiplyByInteger(Pair a, int b)
+    {
+        return new Pair(a.first * b, a.second * b);
+    }
+    public static Pair operator * (Pair a, int b)
+    { 
+        return MultiplyByInteger(a,b); 
     }
 }

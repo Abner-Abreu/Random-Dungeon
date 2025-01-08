@@ -1,13 +1,9 @@
 ﻿using MazeGenerator;
 using PlayerUtils;
-using Others;
+using Pair_Type;
+using Utils;
 class Program
 {
-    enum playerClass {
-        Warrior,
-        Mage,
-        Explorer
-    }
     static void Main()
     {
         #region Number of Players
@@ -43,12 +39,12 @@ class Program
         #endregion
 
         #region Set Players
-            Player[] players = new Player[numberOfPlayers];
+            Player[] playersGroup = new Player[numberOfPlayers];
 
             for (int i = 0; i < numberOfPlayers; i++)
             {
                 Console.Clear();
-                string? name = "PlaceHolder";
+                string? name;
                 do
                 {
                     Console.WriteLine($"Jugador {i+1}: ");
@@ -57,7 +53,7 @@ class Program
                 }while(Player.IsValidName(name) == false); 
                 
                 string? optionPlayerClass = null;
-                string rol = "NoSeted";
+                playerType type = playerType.None;
                 while(optionPlayerClass == null)
                 {
                     Console.WriteLine($"{name} selecciona una Clase: ");
@@ -69,17 +65,17 @@ class Program
                     {
                         case "1":
                         {
-                            rol = "Warrior";
+                            type = playerType.Warrior;
                             break;
                         }
                         case "2":
                         {
-                            rol = "Mage";
+                            type = playerType.Mage;
                             break;
                         }
                         case "3":
                         {
-                            rol = "Explorer";
+                            type = playerType.Explorer;
                             break;
                         }
                         default:
@@ -91,11 +87,12 @@ class Program
                         }
                     }
                 }
-                players[i] = new Player(name,rol);
+                playersGroup[i] = new Player(name,type);
+                Console.WriteLine($"{playersGroup[i]._name} => {playersGroup[i]._playerType}");
             }
         #endregion
 
-        #region Generación del laberinto y preeliminares
+        #region Preeliminares
         Console.Clear();
         Console.WriteLine("Generando laberinto...");
         GameBoard maze;
@@ -112,19 +109,19 @@ class Program
         Console.WriteLine("Colocando jugadores...");
         if(numberOfPlayers == 2)
         {
-            players[0].position = new Pair(1,1);
-            players[1].position = new Pair(15,15);
+            playersGroup[0].position = new Pair(1,1);
+            playersGroup[1].position = new Pair(15,15);
         }
         else
         {
-            players[0].position = new Pair(1,1);
-            players[1].position = new Pair(1,31);
-            players[2].position = new Pair(31,1);
-            players[3].position = new Pair(31,31);
+            playersGroup[0].position = new Pair(1,1);
+            playersGroup[1].position = new Pair(1,31);
+            playersGroup[2].position = new Pair(31,1);
+            playersGroup[3].position = new Pair(31,31);
         }
-        foreach(Player player in players)
+        foreach(Player player in playersGroup)
         {
-            maze[player.position] = GameBoard.CellType.Player;
+            maze[player.position] = CellType.Player;
         }
 
         //maze.PrintMaze();
@@ -137,7 +134,7 @@ class Program
             for (int i = 0; i < numberOfPlayers; i++)
             {   
                 Console.Clear();
-                Console.WriteLine($"Turno de {players[i]._name}");
+                Console.WriteLine($"Turno de {playersGroup[i]._name}");
                 string? optionPlayerAction = null;
                 while(optionPlayerAction == null)
                 {
@@ -164,9 +161,9 @@ class Program
                                 {
                                     case "1":
                                     {
-                                        if(players[i].ValidMove(maze,Player.moveDirections.Up))
+                                        if(playersGroup[i].ValidMove(maze,moveDirection.Up))
                                         {
-                                            players[i].Move(maze,Player.moveDirections.Up);
+                                            playersGroup[i].Move(maze,moveDirection.Up);
                                         }
                                         else
                                         {
@@ -178,9 +175,9 @@ class Program
                                     }
                                     case "2":
                                     {
-                                        if(players[i].ValidMove(maze,Player.moveDirections.Rigth))
+                                        if(playersGroup[i].ValidMove(maze,moveDirection.Rigth))
                                         {
-                                            players[i].Move(maze,Player.moveDirections.Rigth);
+                                            playersGroup[i].Move(maze,moveDirection.Rigth);
                                         }
                                         else
                                         {
@@ -192,9 +189,9 @@ class Program
                                     }
                                     case "3":
                                     {
-                                        if(players[i].ValidMove(maze,Player.moveDirections.Down))
+                                        if(playersGroup[i].ValidMove(maze,moveDirection.Down))
                                         {
-                                            players[i].Move(maze,Player.moveDirections.Down);
+                                            playersGroup[i].Move(maze,moveDirection.Down);
                                         }
                                         else
                                         {
@@ -206,9 +203,9 @@ class Program
                                     }
                                     case "4":
                                     {
-                                        if(players[i].ValidMove(maze,Player.moveDirections.Left))
+                                        if(playersGroup[i].ValidMove(maze,moveDirection.Left))
                                         {
-                                            players[i].Move(maze,Player.moveDirections.Left);
+                                            playersGroup[i].Move(maze,moveDirection.Left);
                                         }
                                         else
                                         {

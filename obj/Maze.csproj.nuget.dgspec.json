@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Abner\\Documents\\Proyectos\\Maze\\Maze.csproj": {}
+    "E:\\Alexandro\\Estudio\\Ciencias de la Computación\\Random-Maze-Project\\Maze.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Abner\\Documents\\Proyectos\\Maze\\Maze.csproj": {
+    "E:\\Alexandro\\Estudio\\Ciencias de la Computación\\Random-Maze-Project\\Maze.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Abner\\Documents\\Proyectos\\Maze\\Maze.csproj",
+        "projectUniqueName": "E:\\Alexandro\\Estudio\\Ciencias de la Computación\\Random-Maze-Project\\Maze.csproj",
         "projectName": "Maze",
-        "projectPath": "C:\\Users\\Abner\\Documents\\Proyectos\\Maze\\Maze.csproj",
-        "packagesPath": "C:\\Users\\Abner\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Abner\\Documents\\Proyectos\\Maze\\obj\\",
+        "projectPath": "E:\\Alexandro\\Estudio\\Ciencias de la Computación\\Random-Maze-Project\\Maze.csproj",
+        "packagesPath": "C:\\Users\\YUNI\\.nuget\\packages\\",
+        "outputPath": "E:\\Alexandro\\Estudio\\Ciencias de la Computación\\Random-Maze-Project\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Abner\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\YUNI\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
