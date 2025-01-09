@@ -3,7 +3,7 @@ using Others;
 using MazeGenerator;
 public class Player 
 {
-    enum moveDirections
+    public enum moveDirections
     {
         Up,
         Down,
@@ -12,14 +12,18 @@ public class Player
     }
     Dictionary<moveDirections,Pair> DIRECTIONS_TO_MOVE = new Dictionary<moveDirections, Pair>()
     {
+        ///REVISAR DIRECCIONES EN EL LABERINTO
+        ///Están cambiadas allá
+        ///Mejorar la organización 
+        ///YA SE MUEVEN!!! SIUUU!!!
         {moveDirections.Up, new Pair(0,1)},
         {moveDirections.Down, new Pair(0,-1)},
         {moveDirections.Rigth, new Pair(1,0)},
         {moveDirections.Left, new Pair(-1,0)}
     };
     public Pair position = new Pair(0,0);
-    private string _name;
-    private string _playerClass;
+    public string _name;
+    public string _playerClass;
 
     #region Stats
         int strength;
@@ -93,16 +97,18 @@ public class Player
         }
         return true;
     }
-    private void Move(GameBoard board, moveDirections direction)
+    public void Move(GameBoard board, moveDirections direction)
     {
         if(ValidMove(board, direction))
         {
+            board[position] = GameBoard.CellType.Road;
             position += DIRECTIONS_TO_MOVE[direction];
+            board[position] = GameBoard.CellType.Player;
         }
     }
-    private bool ValidMove(GameBoard board, moveDirections direction)
+    public bool ValidMove(GameBoard board, moveDirections direction)
     {
         Pair posiblePosition = position + DIRECTIONS_TO_MOVE[direction];
-        return board[posiblePosition] != GameBoard.CellType.Road;
+        return board[posiblePosition] != GameBoard.CellType.Wall;
     }
 }

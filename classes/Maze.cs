@@ -37,7 +37,6 @@ public class GameBoard
 
     private void GenerateMaze(int xPosition, int yPosition)
     {
-        //PrintMaze();
         _maze[xPosition, yPosition] = CellType.Road; // Marck cell as road
 
         // Possible directions: right, down, left, up

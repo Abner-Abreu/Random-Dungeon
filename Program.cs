@@ -43,12 +43,11 @@ class Program
         #endregion
 
         #region Set Players
-            Console.Clear();
-
             Player[] players = new Player[numberOfPlayers];
 
             for (int i = 0; i < numberOfPlayers; i++)
             {
+                Console.Clear();
                 string? name = "PlaceHolder";
                 do
                 {
@@ -85,6 +84,7 @@ class Program
                         }
                         default:
                         {
+                            Console.Clear();
                             Console.WriteLine("Por favor seleccione una opción válida");
                             optionPlayerClass = null;
                             break;
@@ -127,11 +127,124 @@ class Program
             maze[player.position] = GameBoard.CellType.Player;
         }
 
-        maze.PrintMaze();
+        //maze.PrintMaze();
         #endregion
 
         #region Turnos
-            
+        
+        do
+        {
+            for (int i = 0; i < numberOfPlayers; i++)
+            {   
+                Console.Clear();
+                Console.WriteLine($"Turno de {players[i]._name}");
+                string? optionPlayerAction = null;
+                while(optionPlayerAction == null)
+                {
+                    Console.WriteLine("Acciones:");
+                    Console.WriteLine("1- Moverse");
+                    Console.WriteLine("2- Habilidades");
+                    Console.WriteLine("3- Estado");
+                    optionPlayerAction = Console.ReadLine();
+                    switch(optionPlayerAction)
+                    {
+                        case "1":
+                        {
+                            do
+                            {
+                                maze.PrintMaze();
+                                Console.WriteLine("Dirección para moverse: ");
+                                Console.WriteLine("1- Arriba");
+                                Console.WriteLine("2- Derecha");
+                                Console.WriteLine("3- Abajo");
+                                Console.WriteLine("4- Izquierda");
+                                Console.WriteLine("0- Cancelar");
+                                optionPlayerAction = Console.ReadLine();
+                                switch (optionPlayerAction)
+                                {
+                                    case "1":
+                                    {
+                                        if(players[i].ValidMove(maze,Player.moveDirections.Up))
+                                        {
+                                            players[i].Move(maze,Player.moveDirections.Up);
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("No puedes moverte en esa dirección");
+                                            optionPlayerAction = null;
+                                        }
+                                        break;
+                                    }
+                                    case "2":
+                                    {
+                                        if(players[i].ValidMove(maze,Player.moveDirections.Rigth))
+                                        {
+                                            players[i].Move(maze,Player.moveDirections.Rigth);
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("No puedes moverte en esa dirección");
+                                            optionPlayerAction = null;
+                                        }
+                                        break;
+                                    }
+                                    case "3":
+                                    {
+                                        if(players[i].ValidMove(maze,Player.moveDirections.Down))
+                                        {
+                                            players[i].Move(maze,Player.moveDirections.Down);
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("No puedes moverte en esa dirección");
+                                            optionPlayerAction = null;
+                                        }
+                                        break;
+                                    }
+                                    case "4":
+                                    {
+                                        if(players[i].ValidMove(maze,Player.moveDirections.Left))
+                                        {
+                                            players[i].Move(maze,Player.moveDirections.Left);
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("No puedes moverte en esa dirección");
+                                            optionPlayerAction = null;
+                                        }
+                                        break;
+                                    }
+                                    case "0":
+                                    {
+                                        optionPlayerAction = null;
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("Por favor escoja una opción válida");
+                                        optionPlayerAction = "NoMoved";
+                                        break;
+                                    }
+                                }
+                            }while(optionPlayerAction == "NoMoved");
+                            break;
+                        }
+                        default:
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Por favor escoja una opción válida");
+                            optionPlayerAction = null;
+                            break;
+                        }
+                    }
+                }
+            }
+        }while(true);
         #endregion
 
         #region End Game
