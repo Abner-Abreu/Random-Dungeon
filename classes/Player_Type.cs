@@ -1,7 +1,7 @@
-﻿namespace PlayerUtils;
+﻿namespace Player_Type;
 using Utils;
 using Pair_Type;
-using MazeGenerator;
+using GameBoard;
 
 
 
@@ -46,7 +46,7 @@ public class Player
         
         return true;
     }
-    public void Move(GameBoard board, moveDirection direction)
+    public void Move(Maze board, moveDirection direction)
     {
         if(ValidMove(board, direction))
         {
@@ -55,7 +55,7 @@ public class Player
             board[position] = CellType.Player;
         }
     }
-    public bool ValidMove(GameBoard board, moveDirection direction)
+    public bool ValidMove(Maze board, moveDirection direction)
     {
         Pair posiblePosition = position + Utils.Directions[direction];
         return board[posiblePosition] != CellType.Wall;

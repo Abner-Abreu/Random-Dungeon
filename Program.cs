@@ -1,5 +1,5 @@
-﻿using MazeGenerator;
-using PlayerUtils;
+﻿using GameBoard;
+using Player_Type;
 using Pair_Type;
 using Utils;
 using System.Threading;
@@ -96,14 +96,14 @@ class Program
         #region Preeliminares
         Console.Clear();
         Console.WriteLine("Generando laberinto...");
-        GameBoard maze;
+        Maze maze;
         if(numberOfPlayers == 2)
         {
-            maze = new GameBoard(15);    
+            maze = new Maze(15);    
         }
         else
         {
-            maze = new GameBoard(31);
+            maze = new Maze(31);
         }
         maze.PrintMaze();
         Thread.Sleep(5000);

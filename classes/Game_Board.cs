@@ -1,4 +1,4 @@
-﻿namespace MazeGenerator;
+﻿namespace GameBoard;
 using Pair_Type;
 using Utils;
 
@@ -9,7 +9,7 @@ public enum CellType
         Trap,
         Player
     }
-public class GameBoard
+public class Maze
 {
     private CellType[,] _maze;
     public int _size { get; private set; }
@@ -20,7 +20,7 @@ public class GameBoard
         get => _maze[index.second,index.first];
         set => _maze[index.second,index.first] = value;
     }
-    public GameBoard(int size)
+    public Maze(int size)
     {
         _size = size;
         _maze = new CellType[size+2, size+2]; ///y,x
@@ -107,7 +107,7 @@ public class GameBoard
     }
     private void SetTraps()
     {
-        
+
     }
 
     public void PrintMaze()

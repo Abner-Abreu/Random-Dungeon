@@ -1,17 +1,3 @@
-C:\Users\Abner\Documents\Proyectos\Maze\bin\Debug\net8.0\Maze.exe
-C:\Users\Abner\Documents\Proyectos\Maze\bin\Debug\net8.0\Maze.deps.json
-C:\Users\Abner\Documents\Proyectos\Maze\bin\Debug\net8.0\Maze.runtimeconfig.json
-C:\Users\Abner\Documents\Proyectos\Maze\bin\Debug\net8.0\Maze.dll
-C:\Users\Abner\Documents\Proyectos\Maze\bin\Debug\net8.0\Maze.pdb
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\Maze.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\Maze.AssemblyInfoInputs.cache
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\Maze.AssemblyInfo.cs
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\Maze.csproj.CoreCompileInputs.cache
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\Maze.dll
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\refint\Maze.dll
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\Maze.pdb
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\Maze.genruntimeconfig.cache
-C:\Users\Abner\Documents\Proyectos\Maze\obj\Debug\net8.0\ref\Maze.dll
 E:\Alexandro\Estudio\Ciencias de la Computación\Random-Maze-Project\bin\Debug\net8.0\Maze.exe
 E:\Alexandro\Estudio\Ciencias de la Computación\Random-Maze-Project\bin\Debug\net8.0\Maze.deps.json
 E:\Alexandro\Estudio\Ciencias de la Computación\Random-Maze-Project\bin\Debug\net8.0\Maze.runtimeconfig.json
