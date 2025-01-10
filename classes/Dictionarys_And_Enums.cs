@@ -53,15 +53,9 @@ public class Utils
 
     public static Dictionary<moveDirection,Pair> Directions = new Dictionary<moveDirection, Pair>()
     {
-        {moveDirection.Up, new Pair(0,1)},
-        {moveDirection.Down, new Pair(0,-1)},
+        {moveDirection.Up, new Pair(0,-1)},
+        {moveDirection.Down, new Pair(0,1)},
         {moveDirection.Rigth, new Pair(1,0)},
         {moveDirection.Left, new Pair(-1,0)}
-    };
-    Pair[] directionChecker = { 
-        Utils.Directions[moveDirection.Up] * 2,
-        Utils.Directions[moveDirection.Down] * 2,
-        Utils.Directions[moveDirection.Rigth] *2,
-        Utils.Directions[moveDirection.Left] * 2
     };
 }

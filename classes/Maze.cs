@@ -1,5 +1,6 @@
 ﻿namespace MazeGenerator;
 using Pair_Type;
+using Utils;
 
 public enum CellType
     {
@@ -11,33 +12,38 @@ public enum CellType
 public class GameBoard
 {
     private CellType[,] _maze;
+    public int _size { get; private set; }
     private Random _random = new Random();
 
     public CellType this[Pair index]
     {
-        get => _maze[index.first,index.second];
-        set => _maze[index.first,index.second] = value;
+        get => _maze[index.second,index.first];
+        set => _maze[index.second,index.first] = value;
     }
-
-    public GameBoard(int width, int height)
+    public GameBoard(int size)
     {
-        _maze = new CellType[height+2, width+2];
+        _size = size;
+        _maze = new CellType[size+2, size+2]; ///y,x
         // Generate the maze starting from (1, 1)"
-        GenerateMaze(1, 1);
+        GenerateMaze(1,1);
+        SetCenterRoom();
     }
 
+    Pair[] possibleDirections = { 
+        Utils.Directions[moveDirection.Up] * 2,
+        Utils.Directions[moveDirection.Down] * 2,
+        Utils.Directions[moveDirection.Rigth] *2,
+        Utils.Directions[moveDirection.Left] * 2
+    };
     private void GenerateMaze(int xPosition, int yPosition)
     {
         _maze[yPosition, xPosition] = CellType.Road; // Marck cell as road
-        // Possible directions: right, down, left, up
-        int[] xPossibleDirections = { 2, 0, -2, 0 };
-        int[] yPossibleDirections = { 0, 2, 0, -2 };
 
         // Create a list of directions and shuffle it
         var directions = new (int x, int y)[4];
         for (int i = 0; i < 4; i++)
         {
-            directions[i] = (yPossibleDirections[i], xPossibleDirections[i]);
+            directions[i] = (possibleDirections[i].second, possibleDirections[i].first);
         }
 
         // Shuffle directions 
@@ -68,13 +74,10 @@ public class GameBoard
 
     private void CreateCycles(int yPosition, int xPosition)
     {
-        int[] xPossibleDirections = { 2, 0, -2, 0 };
-        int[] yPossibleDirections = { 0, 2, 0, -2 };
-
         for (int i = 0; i < 4; i++)
         {
-            int xNewPosition = xPosition + xPossibleDirections[i];
-            int yNewPosition = yPosition + yPossibleDirections[i];
+            int xNewPosition = xPosition + possibleDirections[i].first;
+            int yNewPosition = yPosition + possibleDirections[i].second;
 
             // Check if the adjacent cell is visited
             if (xNewPosition >= 0 && xNewPosition < _maze.GetLength(0) 
@@ -82,13 +85,29 @@ public class GameBoard
                 && _maze[yNewPosition, xNewPosition] == CellType.Road)
             {
                 // Randomly decide to create a cycle
-                if (_random.Next(26) == 0) // 10% chance to create a cycle
+                if (_random.Next(11) == 0) // 10% chance to create a cycle
                 {
                     // Remove the wall between the current cell and the adjacent visited cell
-                    _maze[yPosition + yPossibleDirections[i] / 2, xPosition + xPossibleDirections[i] / 2] = CellType.Road;
+                    _maze[yPosition + possibleDirections[i].second / 2, xPosition + possibleDirections[i].first / 2] = CellType.Road;
                 }
             }
         }
+    }
+
+    public void SetCenterRoom()
+    {
+        int centerIndex = (_maze.GetLength(0) - 1)/2;
+        for (int i = centerIndex - 1; i <= centerIndex + 1; i++)
+        {
+            for (int j = centerIndex - 1; j <= centerIndex + 1; j++)
+            {
+                _maze[i, j] = CellType.Road;
+            }
+        }
+    }
+    private void SetTraps()
+    {
+        
     }
 
     public void PrintMaze()

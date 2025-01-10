@@ -2,6 +2,7 @@
 using PlayerUtils;
 using Pair_Type;
 using Utils;
+using System.Threading;
 class Program
 {
     static void Main()
@@ -98,26 +99,27 @@ class Program
         GameBoard maze;
         if(numberOfPlayers == 2)
         {
-            maze = new GameBoard(15,15);
+            maze = new GameBoard(15);    
         }
         else
         {
-            maze = new GameBoard(31,31);
+            maze = new GameBoard(31);
         }
-
+        maze.PrintMaze();
+        Thread.Sleep(5000);
         Console.Clear();
         Console.WriteLine("Colocando jugadores...");
         if(numberOfPlayers == 2)
         {
             playersGroup[0].position = new Pair(1,1);
-            playersGroup[1].position = new Pair(15,15);
+            playersGroup[1].position = new Pair(maze._size,maze._size);
         }
         else
         {
             playersGroup[0].position = new Pair(1,1);
-            playersGroup[1].position = new Pair(1,31);
-            playersGroup[2].position = new Pair(31,1);
-            playersGroup[3].position = new Pair(31,31);
+            playersGroup[1].position = new Pair(1,maze._size);
+            playersGroup[2].position = new Pair(maze._size,1);
+            playersGroup[3].position = new Pair(maze._size,maze._size);
         }
         foreach(Player player in playersGroup)
         {
@@ -229,6 +231,11 @@ class Program
                                     }
                                 }
                             }while(optionPlayerAction == "NoMoved");
+                            break;
+                        }
+                        case "2":
+                        {
+
                             break;
                         }
                         default:
