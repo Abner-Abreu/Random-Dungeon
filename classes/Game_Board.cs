@@ -26,6 +26,8 @@ public class Maze
         _maze = new CellType[size+2, size+2]; ///y,x
         // Generate the maze starting from (1, 1)"
         GenerateMaze(1,1);
+        SetCenterRoomTraps();
+        SetTraps();
         SetCenterRoom();
     }
 
@@ -97,19 +99,62 @@ public class Maze
     public void SetCenterRoom()
     {
         int centerIndex = (_maze.GetLength(0) - 1)/2;
-        for (int i = centerIndex - 1; i <= centerIndex + 1; i++)
+        for (int x = centerIndex - 1; x <= centerIndex + 1; x++)
         {
-            for (int j = centerIndex - 1; j <= centerIndex + 1; j++)
+            for (int y = centerIndex - 1; y <= centerIndex + 1; y++)
             {
-                _maze[i, j] = CellType.Road;
+                _maze[x, y] = CellType.Road;
             }
         }
     }
+    private void SetCenterRoomTraps()
+    {
+        int centerIndex = (_maze.GetLength(0) - 1)/2;
+        for (int i = centerIndex - 2; i <= centerIndex + 2; i++)
+        {
+            if (_maze[i, centerIndex-2] == CellType.Road) _maze[i, centerIndex-2] = CellType.Trap; ///Top Border
+            if (_maze[centerIndex-2, i] == CellType.Road) _maze[centerIndex-2, i] = CellType.Trap; ///Left Border
+            if (_maze[centerIndex + 2, i] == CellType.Road) _maze[centerIndex + 2, i] = CellType.Trap; ///Right Border
+            if (_maze[i, centerIndex + 2] == CellType.Road) _maze[i, centerIndex + 2] = CellType.Trap; ///Button Border
+        }
+    }
+    
     private void SetTraps()
     {
-
+        for (int x = 1; x < _maze.GetLength(0) -1; x++)
+        {
+            for (int y = 1; y < _maze.GetLength(1) - 1; y++)
+            {
+                if(_maze[x,y] == CellType.Road && FreeSpaceForTrap(x, y))
+                {
+                    if (x > _size / 5 && y > _size / 5&& 
+                        x < _size - (_size / 5) && y < _size - (_size / 5))
+                    {
+                        if (_random.Next(100) <= 25) _maze[x, y] = CellType.Trap; /// 25% chance Hard
+                    }
+                    else if (x > _size / 3 && y > _size / 3 &&
+                        x < _size - (_size / 3) && y < _size - (_size / 3))
+                    {
+                        if (_random.Next(100) <= 15) _maze[x, y] = CellType.Trap; /// 15% chance Medium
+                    }
+                    else
+                    {
+                        if (_random.Next(100) <= 10 ) _maze[x, y] = CellType.Trap; /// 10% chance Easy
+                    }      
+                }
+            }
+        }
     }
 
+    private bool FreeSpaceForTrap(int x, int y)
+    {
+        int checker = 0;
+        if (_maze[x, y - 1] == CellType.Trap) checker++; //Up
+        if (_maze[x, y + 1] == CellType.Trap) checker++; //Down
+        if (_maze[x + 1, y] == CellType.Trap) checker++; //Right
+        if (_maze[x - 1, y] == CellType.Trap) checker++; //Left
+        return checker == 0;
+    }
     public void PrintMaze()
     {
         for (int x = 0; x < _maze.GetLength(0); x++)
@@ -132,6 +177,11 @@ public class Maze
                     case CellType.Player:
                     {
                         row += "🙂";
+                        break;
+                    }
+                    case CellType.Trap:
+                    {
+                        row += "TT";
                         break;
                     }
                 }

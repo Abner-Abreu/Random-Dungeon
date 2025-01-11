@@ -106,7 +106,7 @@ class Program
             maze = new Maze(31);
         }
         maze.PrintMaze();
-        Thread.Sleep(5000);
+        Thread.Sleep(50000);
         Console.Clear();
         Console.WriteLine("Colocando jugadores...");
         if(numberOfPlayers == 2)
