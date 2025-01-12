@@ -1,5 +1,5 @@
-﻿using GameBoard;
-using Player_Type;
+﻿using Game_Board;
+using Player_Utils;
 using Pair_Type;
 using Utils;
 using System.Threading;
@@ -96,17 +96,16 @@ class Program
         #region Preeliminares
         Console.Clear();
         Console.WriteLine("Generando laberinto...");
-        Maze maze;
+        GameBoard maze;
         if(numberOfPlayers == 2)
         {
-            maze = new Maze(15);    
+            maze = new GameBoard(15);    
         }
         else
         {
-            maze = new Maze(31);
+            maze = new GameBoard(31);
         }
-        maze.PrintMaze();
-        Thread.Sleep(50000);
+        
         Console.Clear();
         Console.WriteLine("Colocando jugadores...");
         if(numberOfPlayers == 2)
@@ -121,10 +120,7 @@ class Program
             playersGroup[2].position = new Pair(maze._size,1);
             playersGroup[3].position = new Pair(maze._size,maze._size);
         }
-        foreach(Player player in playersGroup)
-        {
-            maze[player.position] = CellType.Player;
-        }
+        maze.UpdatePlayersPosition(playersGroup);
 
         //maze.PrintMaze();
         #endregion
@@ -142,13 +138,14 @@ class Program
                 {
                     Console.WriteLine("Acciones:");
                     Console.WriteLine("1- Moverse");
-                    Console.WriteLine("2- Habilidades");
-                    Console.WriteLine("3- Estado");
+                    Console.WriteLine("2- Estado");
+                    Console.WriteLine("3- Habilidad");
                     optionPlayerAction = Console.ReadLine();
                     switch(optionPlayerAction)
                     {
                         case "1":
                         {
+                            int numberOfMoves = 3;
                             do
                             {
                                 maze.PrintMaze();
@@ -157,7 +154,6 @@ class Program
                                 Console.WriteLine("2- Derecha");
                                 Console.WriteLine("3- Abajo");
                                 Console.WriteLine("4- Izquierda");
-                                Console.WriteLine("0- Cancelar");
                                 optionPlayerAction = Console.ReadLine();
                                 switch (optionPlayerAction)
                                 {
@@ -166,12 +162,12 @@ class Program
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Up))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Up);
+                                            numberOfMoves--;
                                         }
                                         else
                                         {
                                             Console.Clear();
                                             Console.WriteLine("No puedes moverte en esa dirección");
-                                            optionPlayerAction = null;
                                         }
                                         break;
                                     }
@@ -180,12 +176,12 @@ class Program
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Rigth))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Rigth);
+                                            numberOfMoves--;
                                         }
                                         else
                                         {
                                             Console.Clear();
                                             Console.WriteLine("No puedes moverte en esa dirección");
-                                            optionPlayerAction = null;
                                         }
                                         break;
                                     }
@@ -194,12 +190,12 @@ class Program
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Down))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Down);
+                                            numberOfMoves--;
                                         }
                                         else
                                         {
                                             Console.Clear();
                                             Console.WriteLine("No puedes moverte en esa dirección");
-                                            optionPlayerAction = null;
                                         }
                                         break;
                                     }
@@ -208,34 +204,53 @@ class Program
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Left))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Left);
+                                            numberOfMoves--;
                                         }
                                         else
                                         {
                                             Console.Clear();
                                             Console.WriteLine("No puedes moverte en esa dirección");
-                                            optionPlayerAction = null;
                                         }
-                                        break;
-                                    }
-                                    case "0":
-                                    {
-                                        optionPlayerAction = null;
                                         break;
                                     }
                                     default:
                                     {
                                         Console.Clear();
                                         Console.WriteLine("Por favor escoja una opción válida");
-                                        optionPlayerAction = "NoMoved";
                                         break;
                                     }
                                 }
-                            }while(optionPlayerAction == "NoMoved");
+                            }while(numberOfMoves > 0);
                             break;
                         }
                         case "2":
                         {
-
+                            break;
+                        }
+                        case "3":
+                        {
+                            Console.Clear();
+                            string description = Utils.Utils.HabilityDescription[playersGroup[i]._playerHability];
+                            Console.WriteLine($"{description}");
+                            switch (playersGroup[i]._playerHability)
+                            {
+                                case playerHability.WallDestroyer:
+                                {
+                                    PlayerHabilitys.WallDestroyer(maze,playersGroup[i]);
+                                    break;
+                                }
+                                case playerHability.Instinct:
+                                {
+                                    PlayerHabilitys.Instinct(maze,playersGroup[i]);
+                                    break;
+                                }
+                                case playerHability.Swap:
+                                {
+                                    PlayerHabilitys.Swap(playersGroup,playersGroup[i]);
+                                    break;
+                                }
+                            }
+                            Thread.Sleep(5000);
                             break;
                         }
                         default:

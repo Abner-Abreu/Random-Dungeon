@@ -1,5 +1,6 @@
-﻿namespace GameBoard;
+﻿namespace Game_Board;
 using Pair_Type;
+using Player_Utils;
 using Utils;
 
 public enum CellType
@@ -9,18 +10,18 @@ public enum CellType
         Trap,
         Player
     }
-public class Maze
+public class GameBoard
 {
     private CellType[,] _maze;
     public int _size { get; private set; }
     private Random _random = new Random();
-
+    
     public CellType this[Pair index]
     {
         get => _maze[index.second,index.first];
         set => _maze[index.second,index.first] = value;
     }
-    public Maze(int size)
+    public GameBoard(int size)
     {
         _size = size;
         _maze = new CellType[size+2, size+2]; ///y,x
@@ -145,7 +146,6 @@ public class Maze
             }
         }
     }
-
     private bool FreeSpaceForTrap(int x, int y)
     {
         int checker = 0;
@@ -154,6 +154,14 @@ public class Maze
         if (_maze[x + 1, y] == CellType.Trap) checker++; //Right
         if (_maze[x - 1, y] == CellType.Trap) checker++; //Left
         return checker == 0;
+    }
+
+    public void UpdatePlayersPosition(Player[] playersGroup)
+    {
+        foreach (Player player in playersGroup)
+        {
+            _maze[player.position.first, player.position.second] = CellType.Player;
+        }
     }
     public void PrintMaze()
     {

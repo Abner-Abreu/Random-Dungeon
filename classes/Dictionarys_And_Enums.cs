@@ -13,6 +13,12 @@ public enum playerType
     Explorer,
     None
 }
+public enum playerHability
+{   
+    WallDestroyer,
+    Instinct,
+    Swap
+}
 public enum moveDirection
     {
         Up,
@@ -51,6 +57,18 @@ public class Utils
         {playerType.Explorer,ExplorerStats},
     };
 
+    public static Dictionary<playerType, playerHability> ClassHability = new Dictionary<playerType, playerHability>()
+    {
+        {playerType.Warrior, playerHability.WallDestroyer},
+        {playerType.Explorer, playerHability.Instinct},
+        {playerType.Mage, playerHability.Swap}
+    };
+    public static Dictionary<playerHability, string> HabilityDescription = new Dictionary<playerHability, string>()
+    {
+        {playerHability.WallDestroyer, "Destructor de Paredes: La ira te inunda y destruyes una pared cercana al azar"},
+        {playerHability.Instinct, "Instinto: Tu instinto de explorador te advierte de la direccion del peligro"},
+        {playerHability.Swap, "Intercambio: Intercambia tu posición con otro aventurero"}
+    };
     public static Dictionary<moveDirection,Pair> Directions = new Dictionary<moveDirection, Pair>()
     {
         {moveDirection.Up, new Pair(0,-1)},

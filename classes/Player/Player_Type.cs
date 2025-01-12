@@ -1,7 +1,7 @@
-﻿namespace Player_Type;
+﻿namespace Player_Utils;
 using Utils;
 using Pair_Type;
-using GameBoard;
+using Game_Board;
 
 
 
@@ -9,6 +9,7 @@ public class Player
 {
     public string? _name;
     public playerType _playerType;
+    public playerHability _playerHability;
     public int strength;
     public int agility;
     public int intelligence;
@@ -18,6 +19,7 @@ public class Player
     {
         _name = name;
         _playerType = type;
+        _playerHability = Utils.ClassHability[_playerType];
         strength = Utils.ClassStats[type][playerStat.Strength];
         agility = Utils.ClassStats[type][playerStat.Agility];
         intelligence = Utils.ClassStats[type][playerStat.Itelligence];
@@ -46,7 +48,7 @@ public class Player
         
         return true;
     }
-    public void Move(Maze board, moveDirection direction)
+    public void Move(GameBoard board, moveDirection direction)
     {
         if(ValidMove(board, direction))
         {
@@ -55,7 +57,7 @@ public class Player
             board[position] = CellType.Player;
         }
     }
-    public bool ValidMove(Maze board, moveDirection direction)
+    public bool ValidMove(GameBoard board, moveDirection direction)
     {
         Pair posiblePosition = position + Utils.Directions[direction];
         return board[posiblePosition] != CellType.Wall;
