@@ -62,4 +62,15 @@ public class Player
         Pair posiblePosition = position + Utils.Directions[direction];
         return board[posiblePosition] != CellType.Wall;
     }
+
+    public bool IsInTheCenter(GameBoard board)
+    {
+        int centerIndex = (board._size+1)/2;
+        if(position.first >= centerIndex - 1 && position.first <= centerIndex + 1
+        && position.second >= centerIndex - 1 && position.second <= centerIndex +1)
+        {
+            return true;
+        }
+        return false;
+    }
 }
