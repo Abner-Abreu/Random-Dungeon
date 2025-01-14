@@ -236,17 +236,22 @@ class Program
                             {
                                 case playerHability.WallDestroyer:
                                 {
-                                    PlayerHabilitys.WallDestroyer(maze,playersGroup[i]);
+                                    Player.WallDestroyer(maze,playersGroup[i]);
                                     break;
                                 }
                                 case playerHability.Instinct:
                                 {
-                                    PlayerHabilitys.Instinct(maze,playersGroup[i]);
+                                    Player.Instinct(maze,playersGroup[i]);
                                     break;
                                 }
                                 case playerHability.Swap:
                                 {
-                                    PlayerHabilitys.Swap(playersGroup,playersGroup[i]);
+                                    Player.Swap(playersGroup,playersGroup[i]);
+                                    break;
+                                }
+                                case playerHability.GoblinSummon:
+                                {
+                                    Player.GoblinSummon(maze,playersGroup[i]);
                                     break;
                                 }
                             }

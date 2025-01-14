@@ -1,9 +1,11 @@
 ﻿namespace Player_Utils;
+
+using System.Net.NetworkInformation;
 using Game_Board;
 using Pair_Type;
 using Utils;
 
-public class PlayerHabilitys
+public partial class Player
 {
     public static Pair[] posibleDirections = {
         Utils.Directions[moveDirection.Up],
@@ -80,4 +82,18 @@ public class PlayerHabilitys
             Console.WriteLine("El hechizo funciona y eres transportado a un lugar mejor... tal vez");
         }
     }   
+
+    public static void Ilumination(GameBoard board, Player player)
+    {
+
+    }
+
+    public static void GoblinSummon(GameBoard board, Player player)
+    {
+        foreach(Pair direction in posibleDirections)
+        {
+            Pair nearCell = player.position + direction;
+            board[nearCell] = CellType.Road;
+        }
+    }
 }

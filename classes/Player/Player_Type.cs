@@ -5,14 +5,11 @@ using Game_Board;
 
 
 
-public class Player 
+public partial class Player 
 {
     public string? _name;
     public playerType _playerType;
     public playerHability _playerHability;
-    public int strength;
-    public int agility;
-    public int intelligence;
     public Pair position = new Pair(0,0);
 
     public Player(string? name, playerType type)
@@ -20,9 +17,6 @@ public class Player
         _name = name;
         _playerType = type;
         _playerHability = Utils.ClassHability[_playerType];
-        strength = Utils.ClassStats[type][playerStat.Strength];
-        agility = Utils.ClassStats[type][playerStat.Agility];
-        intelligence = Utils.ClassStats[type][playerStat.Itelligence];
     }
 
     public static bool IsValidName(string? name)
