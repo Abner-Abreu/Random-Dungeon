@@ -126,14 +126,17 @@ class Program
         #endregion
 
         #region Turnos
-        
+        int numberOfTurns = 0;
+        bool isVictoryAchieved = false;
         do
-        {
+        {   
+            numberOfTurns++;
             for (int i = 0; i < numberOfPlayers; i++)
             {   
                 Console.Clear();
                 Console.WriteLine($"Turno de {playersGroup[i]._name}");
                 string? optionPlayerAction = null;
+                int numberOfMoves = 3;
                 while(optionPlayerAction == null)
                 {
                     Console.WriteLine("Acciones:");
@@ -145,8 +148,7 @@ class Program
                     {
                         case "1":
                         {
-                            int numberOfMoves = 3;
-                            do
+                            while(numberOfMoves > 0)
                             {
                                 maze.PrintMaze();
                                 Console.WriteLine("Dirección para moverse: ");
@@ -154,6 +156,7 @@ class Program
                                 Console.WriteLine("2- Derecha");
                                 Console.WriteLine("3- Abajo");
                                 Console.WriteLine("4- Izquierda");
+                                Console.WriteLine("0- Cancelar");
                                 optionPlayerAction = Console.ReadLine();
                                 switch (optionPlayerAction)
                                 {
@@ -220,7 +223,7 @@ class Program
                                         break;
                                     }
                                 }
-                            }while(numberOfMoves > 0);
+                            }
                             break;
                         }
                         case "2":
@@ -267,8 +270,16 @@ class Program
                         }
                     }
                 }
+                if(playersGroup[i].IsInTheCenter(maze))
+                {
+                    isVictoryAchieved = true;
+                    Console.Clear();
+                    Console.WriteLine($"{playersGroup[i]._name} ha llegado al centro del laberinto");
+                    Console.WriteLine($"Logró la victoria tras {numberOfTurns} turnos");
+                    Console.WriteLine("FELICIDADES!!!");
+                }
             }
-        }while(true);
+        }while(isVictoryAchieved == false);
         #endregion
 
         #region End Game
