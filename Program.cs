@@ -16,15 +16,15 @@ class Program
                 Console.WriteLine("1- Dos jugadores");
                 Console.WriteLine("2- Cuatro jugadores");
 
-                string? optionNumberOfPlayers = Console.ReadLine();
-                switch (optionNumberOfPlayers)
+                ConsoleKeyInfo optionNumberOfPlayers = Console.ReadKey(true);
+                switch (optionNumberOfPlayers.KeyChar)
                 {
-                    case "1":
+                    case '1':
                     {
                         numberOfPlayers = 2;
                         break;
                     }
-                    case "2": 
+                    case '2': 
                     {
                         numberOfPlayers = 4;
                         break;
@@ -53,37 +53,41 @@ class Program
                     name = Console.ReadLine();
                 }while(Player.IsValidName(name) == false); 
                 
-                string? optionPlayerClass = null;
                 playerType type = playerType.None;
-                while(optionPlayerClass == null)
+                while(type == playerType.None)
                 {
                     Console.WriteLine($"{name} selecciona una Clase: ");
                     Console.WriteLine("1- Guerrero");
                     Console.WriteLine("2- Mago");
                     Console.WriteLine("3- Explorador");
-                    optionPlayerClass = Console.ReadLine();
-                    switch (optionPlayerClass)
+                    Console.WriteLine("4- Invocador");
+                    ConsoleKeyInfo	optionPlayerClass = Console.ReadKey(true);
+                    switch (optionPlayerClass.KeyChar)
                     {
-                        case "1":
+                        case '1':
                         {
                             type = playerType.Warrior;
                             break;
                         }
-                        case "2":
+                        case '2':
                         {
                             type = playerType.Mage;
                             break;
                         }
-                        case "3":
+                        case '3':
                         {
                             type = playerType.Explorer;
+                            break;
+                        }
+                        case '4':
+                        {
+                            type = playerType.Summoner;
                             break;
                         }
                         default:
                         {
                             Console.Clear();
                             Console.WriteLine("Por favor seleccione una opción válida");
-                            optionPlayerClass = null;
                             break;
                         }
                     }
@@ -135,20 +139,22 @@ class Program
             {   
                 Console.Clear();
                 Console.WriteLine($"Turno de {playersGroup[i]._name}");
-                string? optionPlayerAction = null;
+                
                 int numberOfMoves = 3;
-                while(optionPlayerAction == null)
+                while(numberOfMoves > 0 && isVictoryAchieved == false)
                 {
+                    Console.Clear();
                     Console.WriteLine("Acciones:");
                     Console.WriteLine("1- Moverse");
                     Console.WriteLine("2- Estado");
                     Console.WriteLine("3- Habilidad");
-                    optionPlayerAction = Console.ReadLine();
-                    switch(optionPlayerAction)
+                    ConsoleKeyInfo	optionSelected = Console.ReadKey(true);
+                    switch(optionSelected.KeyChar)
                     {
-                        case "1":
+                        case '1':
                         {
-                            while(numberOfMoves > 0)
+                            bool wantToMove = true;
+                            while(numberOfMoves > 0 && wantToMove && isVictoryAchieved == false)
                             {
                                 maze.PrintMaze();
                                 Console.WriteLine("Dirección para moverse: ");
@@ -157,15 +163,19 @@ class Program
                                 Console.WriteLine("3- Abajo");
                                 Console.WriteLine("4- Izquierda");
                                 Console.WriteLine("0- Cancelar");
-                                optionPlayerAction = Console.ReadLine();
-                                switch (optionPlayerAction)
+                                ConsoleKeyInfo optionPlayerAction = Console.ReadKey(true);
+                                switch (optionPlayerAction.KeyChar)
                                 {
-                                    case "1":
+                                    case '1':
                                     {
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Up))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Up);
                                             numberOfMoves--;
+                                            if(playersGroup[i].IsInTheCenter(maze))
+                                            {
+                                                isVictoryAchieved = true;
+                                            }
                                         }
                                         else
                                         {
@@ -174,12 +184,16 @@ class Program
                                         }
                                         break;
                                     }
-                                    case "2":
+                                    case '2':
                                     {
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Rigth))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Rigth);
                                             numberOfMoves--;
+                                            if(playersGroup[i].IsInTheCenter(maze))
+                                            {
+                                                isVictoryAchieved = true;
+                                            }
                                         }
                                         else
                                         {
@@ -188,12 +202,16 @@ class Program
                                         }
                                         break;
                                     }
-                                    case "3":
+                                    case '3':
                                     {
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Down))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Down);
                                             numberOfMoves--;
+                                            if(playersGroup[i].IsInTheCenter(maze))
+                                            {
+                                                isVictoryAchieved = true;
+                                            }
                                         }
                                         else
                                         {
@@ -202,18 +220,27 @@ class Program
                                         }
                                         break;
                                     }
-                                    case "4":
+                                    case '4':
                                     {
                                         if(playersGroup[i].ValidMove(maze,moveDirection.Left))
                                         {
                                             playersGroup[i].Move(maze,moveDirection.Left);
                                             numberOfMoves--;
+                                            if(playersGroup[i].IsInTheCenter(maze))
+                                            {
+                                                isVictoryAchieved = true;
+                                            }
                                         }
                                         else
                                         {
                                             Console.Clear();
                                             Console.WriteLine("No puedes moverte en esa dirección");
                                         }
+                                        break;
+                                    }
+                                    case '0':
+                                    {
+                                        wantToMove = false;
                                         break;
                                     }
                                     default:
@@ -226,11 +253,11 @@ class Program
                             }
                             break;
                         }
-                        case "2":
+                        case '2':
                         {
                             break;
                         }
-                        case "3":
+                        case '3':
                         {
                             Console.Clear();
                             string description = Utils.Utils.HabilityDescription[playersGroup[i]._playerHability];
@@ -265,14 +292,12 @@ class Program
                         {
                             Console.Clear();
                             Console.WriteLine("Por favor escoja una opción válida");
-                            optionPlayerAction = null;
                             break;
                         }
                     }
                 }
-                if(playersGroup[i].IsInTheCenter(maze))
+                if(isVictoryAchieved)
                 {
-                    isVictoryAchieved = true;
                     Console.Clear();
                     Console.WriteLine($"{playersGroup[i]._name} ha llegado al centro del laberinto");
                     Console.WriteLine($"Logró la victoria tras {numberOfTurns} turnos");

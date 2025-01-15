@@ -93,7 +93,7 @@ public partial class Player
         foreach(Pair direction in posibleDirections)
         {
             Pair nearCell = player.position + direction;
-            board[nearCell] = CellType.Road;
+            if (board[nearCell] == CellType.Trap) board[nearCell] = CellType.Road;
         }
     }
 }
