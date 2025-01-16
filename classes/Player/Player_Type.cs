@@ -10,6 +10,8 @@ public partial class Player
     public string? _name;
     public playerType _playerType;
     public playerHability _playerHability;
+
+    public int numberOfMoves = 3;
     public Pair position = new Pair(0,0);
 
     public Player(string? name, playerType type)

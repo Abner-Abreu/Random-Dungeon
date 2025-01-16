@@ -139,9 +139,9 @@ class Program
             {   
                 Console.Clear();
                 Console.WriteLine($"Turno de {playersGroup[i]._name}");
-                
-                int numberOfMoves = 3;
-                while(numberOfMoves > 0 && isVictoryAchieved == false)
+
+                playersGroup[i].numberOfMoves = 3;
+                while(playersGroup[i].numberOfMoves > 0)
                 {
                     Console.Clear();
                     Console.WriteLine("Acciones:");
@@ -153,104 +153,7 @@ class Program
                     {
                         case '1':
                         {
-                            bool wantToMove = true;
-                            while(numberOfMoves > 0 && wantToMove && isVictoryAchieved == false)
-                            {
-                                maze.PrintMaze();
-                                Console.WriteLine("Dirección para moverse: ");
-                                Console.WriteLine("1- Arriba");
-                                Console.WriteLine("2- Derecha");
-                                Console.WriteLine("3- Abajo");
-                                Console.WriteLine("4- Izquierda");
-                                Console.WriteLine("0- Cancelar");
-                                ConsoleKeyInfo optionPlayerAction = Console.ReadKey(true);
-                                switch (optionPlayerAction.KeyChar)
-                                {
-                                    case '1':
-                                    {
-                                        if(playersGroup[i].ValidMove(maze,moveDirection.Up))
-                                        {
-                                            playersGroup[i].Move(maze,moveDirection.Up);
-                                            numberOfMoves--;
-                                            if(playersGroup[i].IsInTheCenter(maze))
-                                            {
-                                                isVictoryAchieved = true;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Console.Clear();
-                                            Console.WriteLine("No puedes moverte en esa dirección");
-                                        }
-                                        break;
-                                    }
-                                    case '2':
-                                    {
-                                        if(playersGroup[i].ValidMove(maze,moveDirection.Rigth))
-                                        {
-                                            playersGroup[i].Move(maze,moveDirection.Rigth);
-                                            numberOfMoves--;
-                                            if(playersGroup[i].IsInTheCenter(maze))
-                                            {
-                                                isVictoryAchieved = true;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Console.Clear();
-                                            Console.WriteLine("No puedes moverte en esa dirección");
-                                        }
-                                        break;
-                                    }
-                                    case '3':
-                                    {
-                                        if(playersGroup[i].ValidMove(maze,moveDirection.Down))
-                                        {
-                                            playersGroup[i].Move(maze,moveDirection.Down);
-                                            numberOfMoves--;
-                                            if(playersGroup[i].IsInTheCenter(maze))
-                                            {
-                                                isVictoryAchieved = true;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Console.Clear();
-                                            Console.WriteLine("No puedes moverte en esa dirección");
-                                        }
-                                        break;
-                                    }
-                                    case '4':
-                                    {
-                                        if(playersGroup[i].ValidMove(maze,moveDirection.Left))
-                                        {
-                                            playersGroup[i].Move(maze,moveDirection.Left);
-                                            numberOfMoves--;
-                                            if(playersGroup[i].IsInTheCenter(maze))
-                                            {
-                                                isVictoryAchieved = true;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Console.Clear();
-                                            Console.WriteLine("No puedes moverte en esa dirección");
-                                        }
-                                        break;
-                                    }
-                                    case '0':
-                                    {
-                                        wantToMove = false;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        Console.Clear();
-                                        Console.WriteLine("Por favor escoja una opción válida");
-                                        break;
-                                    }
-                                }
-                            }
+                            playersGroup[i].MoveMenu(maze);
                             break;
                         }
                         case '2':

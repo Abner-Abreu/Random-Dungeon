@@ -30,11 +30,18 @@ public partial class Player
         Pair wallToDestroy = destroyableWallPosition[dice.Next(numberOfDestroyableWalls)];
         if (IsBorderWall(maze._size, wallToDestroy))
         {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Intentas derribar una pared exterior de la mazmorra, no logras ni arañarla");
+            Console.ResetColor();
         }
         else
         {
             maze[wallToDestroy] = CellType.Road;
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Derribas la pared de un golpe, ahora puedes pasar");
+            Console.ResetColor();
         }
     }
     private static bool IsBorderWall(int mazeSize, Pair position) 
@@ -46,24 +53,27 @@ public partial class Player
         return false;
     }
 
-    public static void Instinct (GameBoard maze, Player player)
+    public static void Instinct (GameBoard board, Player player)
     {
-        if (maze[player.position + Utils.Directions[moveDirection.Up]] == CellType.Trap)
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        if (board[player.position + Utils.Directions[moveDirection.Up]] == CellType.Trap)
         {
             Console.WriteLine("Hay una trampa al norte");
         }
-        if (maze[player.position + Utils.Directions[moveDirection.Down]] == CellType.Trap)
+        if (board[player.position + Utils.Directions[moveDirection.Down]] == CellType.Trap)
         {
             Console.WriteLine("Hay una trampa al sur");
         }
-        if (maze[player.position + Utils.Directions[moveDirection.Rigth]] == CellType.Trap)
+        if (board[player.position + Utils.Directions[moveDirection.Rigth]] == CellType.Trap)
         {
             Console.WriteLine("Hay una trampa al este");
         }
-        if (maze[player.position + Utils.Directions[moveDirection.Left]] == CellType.Trap)
+        if (board[player.position + Utils.Directions[moveDirection.Left]] == CellType.Trap)
         {
             Console.WriteLine("Hay una trampa al oeste");
         }
+        Console.ResetColor();
     }
 
     public static void Swap (Player[] playersGroup, Player player)
@@ -72,20 +82,26 @@ public partial class Player
         int playerToSwap = dice.Next(playersGroup.Length);
         if (playersGroup[playerToSwap].position == player.position)
         {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("El hechizo falla miserablemente... te quedas en tu sitio");
+            Console.ResetColor();
         }
         else
         {
             Pair temp = playersGroup[playerToSwap].position;
             playersGroup[playerToSwap].position = player.position;
             player.position = temp;
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("El hechizo funciona y eres transportado a un lugar mejor... tal vez");
+            Console.ResetColor();
         }
     }   
 
-    public static void Ilumination(GameBoard board, Player player)
+    public static void PutTrap(GameBoard board, Player player)
     {
-
+        
     }
 
     public static void GoblinSummon(GameBoard board, Player player)
@@ -93,7 +109,10 @@ public partial class Player
         foreach(Pair direction in posibleDirections)
         {
             Pair nearCell = player.position + direction;
-            if (board[nearCell] == CellType.Trap) board[nearCell] = CellType.Road;
+            if(board[nearCell] == CellType.Trap)
+            {
+                board[nearCell] = CellType.Road;
+            }
         }
     }
 }
