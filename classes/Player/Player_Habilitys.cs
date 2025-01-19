@@ -15,7 +15,7 @@ public partial class Player
     public void WallDestroyer(GameBoard maze)
     {
         SetPosibleMoves();
-        List<(int, int)> destroyableWallPosition = new List<(int,int)>();
+        List<(int, int)> destroyableWallPosition = new List<(int, int)>();
         int numberOfDestroyableWalls = 0;
         for (int i = 0; i < 4; i++)
         {
@@ -43,19 +43,19 @@ public partial class Player
             Console.ResetColor();
         }
     }
-    private static bool IsBorderWall((int x, int y) mazeSize,(int x, int y) position) 
+    private static bool IsBorderWall((int x, int y) mazeSize, (int x, int y) position)
     {
         if (position.x == 0 || position.x > mazeSize.x) return true; //Left and Right Border
         if (position.y == 0 || position.y > mazeSize.y) return true; //Top and Button Border
         return false;
     }
 
-    public void Instinct (GameBoard board)
+    public void Instinct(GameBoard board)
     {
         SetPosibleMoves();
-        for(int i = 0; i < posibleMoves.Length; i++)
+        for (int i = 0; i < posibleMoves.Length; i++)
         {
-            if(board[posibleMoves[i]] == CellType.Trap_Hiden)
+            if (board[posibleMoves[i]] == CellType.Trap_Hiden)
             {
                 board[posibleMoves[i]] = CellType.Trap_Visible;
             }
@@ -65,7 +65,7 @@ public partial class Player
         Console.WriteLine("Trampas mostradas");
     }
 
-    public void Swap (Player[] playersGroup)
+    public void Swap(Player[] playersGroup)
     {
         Random dice = new Random();
         int playerToSwap = dice.Next(playersGroup.Length);
@@ -86,23 +86,27 @@ public partial class Player
             Console.WriteLine("El hechizo funciona y eres transportado a un lugar mejor... tal vez");
             Console.ResetColor();
         }
-    }   
+    }
 
     public void PutTrap(GameBoard board, Player player)
     {
-        
+
     }
 
     public void GoblinSummon(GameBoard board)
     {
+        SetPosibleMoves();
         int disabledTraps = 0;
-        foreach((int x, int y) direction in posibleMoves)
+        foreach ((int x, int y) direction in posibleMoves)
         {
-            (int x, int y) nearCell = (position.x + direction.x,position.x + direction.y);
-            if(board[nearCell] == CellType.Road)
+            Console.WriteLine($"{direction.x} {direction.y}");
+            if (direction.x <= board._size.x && direction.y <= board._size.y)
             {
-                board[nearCell] = CellType.Road;
-                disabledTraps++;
+                if (board[direction] == CellType.Trap_Hiden || board[direction] == CellType.Trap_Visible)
+                {
+                    board[direction] = CellType.Road;
+                    disabledTraps++;
+                }
             }
         }
         Console.Clear();

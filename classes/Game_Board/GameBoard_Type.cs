@@ -11,8 +11,8 @@ public enum CellType
     }
 public class GameBoard
 {
-    private CellType[,] _maze = new CellType[0,0];
-    public (int x, int y) _size { get; private set; } = (0, 0);
+    private CellType[,] _maze;
+    public (int x, int y) _size { get; private set; }
     private Random _random = new Random();
     
     public CellType this[(int x, int y) index]
@@ -22,12 +22,8 @@ public class GameBoard
     }
     public GameBoard(int size)
     {
-        new GameBoard(size!, size!);
-    }
-    public GameBoard(int xSize, int ySize)
-    {
-        _size = (xSize,ySize);
-        _maze = new CellType[ySize+2, xSize+2]; ///y,x
+        _size = (size,size);
+        _maze = new CellType[size+2, size+2]; ///y,x
         // Generate the maze starting from (1, 1)
         GenerateMaze((1,1));
         SetCenterRoomTraps();
@@ -154,7 +150,7 @@ public class GameBoard
     {
         foreach (Player player in playersGroup)
         {
-            _maze[player.position.x, player.position.y] = CellType.Player;
+            _maze[player.position.y, player.position.x] = CellType.Player;
         }
     }
     public void PrintMaze()
@@ -188,7 +184,7 @@ public class GameBoard
                     }
                     case CellType.Trap_Hiden:
                     {
-                        row += "  ";
+                        row += "TT";
                         break;
                     }
                 }
