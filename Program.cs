@@ -1,205 +1,173 @@
 ﻿using Game_Board;
 using Player_Utils;
-using Pair_Type;
-using Utils;
-using System.Threading;
+using Spectre.Console;
 class Program
 {
+    public static void WaitAnimation(string message)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            Console.Clear();
+            Console.Write(message);
+            Thread.Sleep(500);
+            for (int j = 0; j < 3; j++)
+            {
+                Console.Write('.');
+                Thread.Sleep(250);
+            }
+        }
+    }
     static void Main()
     {
-        #region Number of Players
-        int numberOfPlayers = 0;
         Console.Clear();
-            while (numberOfPlayers != 2 && numberOfPlayers != 4)
-            {
-                Console.WriteLine("Escoja el número de Jugadores: ");
-                Console.WriteLine("1- Dos jugadores");
-                Console.WriteLine("2- Cuatro jugadores");
-
-                ConsoleKeyInfo optionNumberOfPlayers = Console.ReadKey(true);
-                switch (optionNumberOfPlayers.KeyChar)
-                {
-                    case '1':
-                    {
-                        numberOfPlayers = 2;
-                        break;
-                    }
-                    case '2': 
-                    {
-                        numberOfPlayers = 4;
-                        break;
-                    }
-                    default:
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Por favor seleccione una opción válida");
-                        break;
-                    }
-                }
-            }
+        #region Players Number
+        int numberOfPlayers = 0;
+        var selectionActions = new Dictionary<string, Action>()
+        {
+            {"Dos Jugadores", () => numberOfPlayers = 2 },
+            {"Cuatro Jugadores", () => numberOfPlayers = 4}
+        };
+        var startMenu = new SelectionPrompt<string>()
+            .Title("[green]Seleccione la cantidad de jugadores: [/]")
+            .AddChoices(selectionActions.Keys);
+        selectionActions[AnsiConsole.Prompt(startMenu)].Invoke();
         #endregion
 
         #region Set Players
-            Player[] playersGroup = new Player[numberOfPlayers];
-
-            for (int i = 0; i < numberOfPlayers; i++)
-            {
-                Console.Clear();
-                string? name;
-                do
+        Player[] playersGroup = new Player[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            Console.Clear();
+            string? name;
+            var insertName = new TextPrompt<string>($"Introduce el numbre del [yellow]Jugador {i + 1}[/]: ")
+                .Validate(name =>
                 {
-                    Console.WriteLine($"Jugador {i+1}: ");
-                    Console.WriteLine($"Inserte Nombre del Jugador {i+1}: ");
-                    name = Console.ReadLine();
-                }while(Player.IsValidName(name) == false); 
-                
-                playerType type = playerType.None;
-                while(type == playerType.None)
-                {
-                    Console.WriteLine($"{name} selecciona una Clase: ");
-                    Console.WriteLine("1- Guerrero");
-                    Console.WriteLine("2- Mago");
-                    Console.WriteLine("3- Explorador");
-                    Console.WriteLine("4- Invocador");
-                    ConsoleKeyInfo	optionPlayerClass = Console.ReadKey(true);
-                    switch (optionPlayerClass.KeyChar)
+                    if (name == null)
                     {
-                        case '1':
-                        {
-                            type = playerType.Warrior;
-                            break;
-                        }
-                        case '2':
-                        {
-                            type = playerType.Mage;
-                            break;
-                        }
-                        case '3':
-                        {
-                            type = playerType.Explorer;
-                            break;
-                        }
-                        case '4':
-                        {
-                            type = playerType.Summoner;
-                            break;
-                        }
-                        default:
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Por favor seleccione una opción válida");
-                            break;
-                        }
+                        return ValidationResult.Error("[red]El nombre no puede estar vacío[/]");
                     }
-                }
-                playersGroup[i] = new Player(name,type);
-                Console.WriteLine($"{playersGroup[i]._name} => {playersGroup[i]._playerType}");
-            }
+                    if (name.Contains(' '))
+                    {
+                        return ValidationResult.Error("[red]El nombre no puede contener espacios[/]");
+                    }
+                    if (name.Length < 3 || name.Length > 10)
+                    {
+                        return ValidationResult.Error("[red]El nombre debe contener entre 3 y 10 caracteres[/]");
+                    }
+                    return ValidationResult.Success();
+                });
+            name = AnsiConsole.Prompt(insertName);
+
+            var classMenu = new SelectionPrompt<string>()
+                .Title($"[yellow]{name}[/] selecciona una Clase: ")
+                .AddChoices(["Guerrero", "Mago", "Explorador", "Invocador"]);
+
+            playerType type = AnsiConsole.Prompt(classMenu) switch
+            {
+                "Guerrero" => playerType.Warrior,
+                "Mago" => playerType.Mage,
+                "Explorador" => playerType.Explorer,
+                "Invocador" => playerType.Summoner,
+            };
+
+            playersGroup[i] = new Player(name, type);
+        }
         #endregion
 
         #region Preeliminares
-        Console.Clear();
-        Console.WriteLine("Generando laberinto...");
-        GameBoard maze;
-        if(numberOfPlayers == 2)
+
+        WaitAnimation("Generando Laberinto");
+
+        GameBoard maze = numberOfPlayers switch
         {
-            maze = new GameBoard(15);    
+            2 => new GameBoard(15),
+            4 => new GameBoard(31)
+        };
+
+
+        WaitAnimation("Colocando Jugadores");
+        if (numberOfPlayers == 2)
+        {
+            playersGroup[0].position = (1, 1);
+            playersGroup[1].position = (maze._size.x, maze._size.y);
         }
         else
         {
-            maze = new GameBoard(31);
-        }
-        
-        Console.Clear();
-        Console.WriteLine("Colocando jugadores...");
-        if(numberOfPlayers == 2)
-        {
-            playersGroup[0].position = new Pair(1,1);
-            playersGroup[1].position = new Pair(maze._size,maze._size);
-        }
-        else
-        {
-            playersGroup[0].position = new Pair(1,1);
-            playersGroup[1].position = new Pair(1,maze._size);
-            playersGroup[2].position = new Pair(maze._size,1);
-            playersGroup[3].position = new Pair(maze._size,maze._size);
+            playersGroup[0].position = (1, 1);
+            playersGroup[1].position = (1, maze._size.y);
+            playersGroup[2].position = (maze._size.x, 1);
+            playersGroup[3].position = (maze._size.x, maze._size.y);
         }
         maze.UpdatePlayersPosition(playersGroup);
-
-        //maze.PrintMaze();
         #endregion
 
         #region Turnos
         int numberOfTurns = 0;
         bool isVictoryAchieved = false;
         do
-        {   
+        {
             numberOfTurns++;
             for (int i = 0; i < numberOfPlayers; i++)
-            {   
+            {
                 Console.Clear();
-                Console.WriteLine($"Turno de {playersGroup[i]._name}");
-
+                Console.WriteLine();
                 playersGroup[i].numberOfMoves = 3;
-                while(playersGroup[i].numberOfMoves > 0)
+                if (playersGroup[i].habilityColdDown > 0) playersGroup[i].habilityColdDown--;
+
+                var turnMenu = new SelectionPrompt<string>()
+                    .Title($"Turno de {playersGroup[i]._name}")
+                    .Title("Acciones: ")
+                    .AddChoices(["Moverse", "Estado", "Usar Habilidad", "Terminar Turno"]);
+
+                bool turnEnded = false;
+                while (playersGroup[i].numberOfMoves > 0 && turnEnded == false)
                 {
-                    Console.Clear();
-                    Console.WriteLine("Acciones:");
-                    Console.WriteLine("1- Moverse");
-                    Console.WriteLine("2- Estado");
-                    Console.WriteLine("3- Habilidad");
-                    ConsoleKeyInfo	optionSelected = Console.ReadKey(true);
-                    switch(optionSelected.KeyChar)
+                    Action action = AnsiConsole.Prompt(turnMenu) switch
                     {
-                        case '1':
+                        "Moverse" => () =>
                         {
-                            playersGroup[i].MoveMenu(maze);
-                            break;
-                        }
-                        case '2':
-                        {
-                            break;
-                        }
-                        case '3':
-                        {
-                            Console.Clear();
-                            string description = Utils.Utils.HabilityDescription[playersGroup[i]._playerHability];
-                            Console.WriteLine($"{description}");
-                            switch (playersGroup[i]._playerHability)
+                            bool cancelMove = false;
+                            while (playersGroup[i].numberOfMoves > 0 && cancelMove == false)
                             {
-                                case playerHability.WallDestroyer:
+                                Console.Clear();
+                                maze.PrintMaze();
+                                Action move = Console.ReadKey(false).Key switch
                                 {
-                                    Player.WallDestroyer(maze,playersGroup[i]);
-                                    break;
-                                }
-                                case playerHability.Instinct:
-                                {
-                                    Player.Instinct(maze,playersGroup[i]);
-                                    break;
-                                }
-                                case playerHability.Swap:
-                                {
-                                    Player.Swap(playersGroup,playersGroup[i]);
-                                    break;
-                                }
-                                case playerHability.GoblinSummon:
-                                {
-                                    Player.GoblinSummon(maze,playersGroup[i]);
-                                    break;
-                                }
+                                    ConsoleKey.UpArrow => () => playersGroup[i].Move(maze, moveDirection.Up),
+                                    ConsoleKey.DownArrow => () => playersGroup[i].Move(maze, moveDirection.Down),
+                                    ConsoleKey.RightArrow => () => playersGroup[i].Move(maze, moveDirection.Rigth),
+                                    ConsoleKey.LeftArrow => () => playersGroup[i].Move(maze, moveDirection.Left),
+                                    ConsoleKey.Backspace => () => cancelMove = true,
+                                    _ => () => {}
+                                };
+                                move.Invoke();
                             }
-                            Thread.Sleep(5000);
-                            break;
-                        }
-                        default:
+                        },
+                        "Usar Habilidad" => () =>
                         {
-                            Console.Clear();
-                            Console.WriteLine("Por favor escoja una opción válida");
-                            break;
-                        }
-                    }
+                            if (playersGroup[i].habilityColdDown == 0)
+                            {
+                                Action useHability = playersGroup[i]._playerHability switch
+                                {
+                                    playerHability.WallDestroyer => () => playersGroup[i].WallDestroyer(maze),
+                                    playerHability.Swap => () => playersGroup[i].Swap(playersGroup),
+                                    playerHability.Instinct => () => playersGroup[i].Instinct(maze),
+                                    playerHability.GoblinSummon => () => playersGroup[i].GoblinSummon(maze),
+                                };
+                                useHability.Invoke();
+                                playersGroup[i].habilityColdDown = 3;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"No puedes usar tu habilidad hasta dentro de {playersGroup[i].habilityColdDown} turnos");
+                                Console.ReadKey(true);
+                            }
+                        },
+                        "Terminar Turno" => () => turnEnded = true,
+                    };
+                    action.Invoke();
                 }
-                if(isVictoryAchieved)
+                if (isVictoryAchieved)
                 {
                     Console.Clear();
                     Console.WriteLine($"{playersGroup[i]._name} ha llegado al centro del laberinto");
@@ -207,12 +175,7 @@ class Program
                     Console.WriteLine("FELICIDADES!!!");
                 }
             }
-        }while(isVictoryAchieved == false);
+        } while (isVictoryAchieved == false);
         #endregion
-
-        #region End Game
-            
-        #endregion
-
     }
 }

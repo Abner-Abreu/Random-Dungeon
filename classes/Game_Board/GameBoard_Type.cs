@@ -1,52 +1,49 @@
 ﻿namespace Game_Board;
-using Pair_Type;
 using Player_Utils;
-using Utils;
 
 public enum CellType
     {
         Wall,
         Road,
-        Trap,
+        Trap_Hiden,
+        Trap_Visible,
         Player
     }
 public class GameBoard
 {
-    private CellType[,] _maze;
-    public int _size { get; private set; }
+    private CellType[,] _maze = new CellType[0,0];
+    public (int x, int y) _size { get; private set; } = (0, 0);
     private Random _random = new Random();
     
-    public CellType this[Pair index]
+    public CellType this[(int x, int y) index]
     {
-        get => _maze[index.second,index.first];
-        set => _maze[index.second,index.first] = value;
+        get => _maze[index.y,index.x];
+        set => _maze[index.y,index.x] = value;
     }
     public GameBoard(int size)
     {
-        _size = size;
-        _maze = new CellType[size+2, size+2]; ///y,x
-        // Generate the maze starting from (1, 1)"
-        GenerateMaze(1,1);
+        new GameBoard(size!, size!);
+    }
+    public GameBoard(int xSize, int ySize)
+    {
+        _size = (xSize,ySize);
+        _maze = new CellType[ySize+2, xSize+2]; ///y,x
+        // Generate the maze starting from (1, 1)
+        GenerateMaze((1,1));
         SetCenterRoomTraps();
         SetTraps();
         SetCenterRoom();
     }
-
-    Pair[] possibleDirections = { 
-        Utils.Directions[moveDirection.Up] * 2,
-        Utils.Directions[moveDirection.Down] * 2,
-        Utils.Directions[moveDirection.Rigth] *2,
-        Utils.Directions[moveDirection.Left] * 2
-    };
-    private void GenerateMaze(int xPosition, int yPosition)
+    (int x, int y)[] possibleDirections = {(0,-2),(0,2),(2,0),(-2,0)};
+    private void GenerateMaze((int x, int y) position)
     {
-        _maze[yPosition, xPosition] = CellType.Road; // Marck cell as road
+        _maze[position.y, position.x] = CellType.Road; // Marck cell as road
 
         // Create a list of directions and shuffle it
         var directions = new (int x, int y)[4];
         for (int i = 0; i < 4; i++)
         {
-            directions[i] = (possibleDirections[i].second, possibleDirections[i].first);
+            directions[i] = (possibleDirections[i].x, possibleDirections[i].y);
         }
 
         // Shuffle directions 
@@ -58,40 +55,38 @@ public class GameBoard
             directions[j] = temp;
         }
 
-        foreach (var (xDirection, yDirection) in directions)
+        foreach ((int x, int y) direction in directions)
         {
-            int xNewPosition = xPosition + xDirection;
-            int yNewPosition = yPosition + yDirection;
+            (int x, int y) newPosition = (position.x + direction.x, position.y + direction.y);
 
-            if (xNewPosition >= 0 && xNewPosition < _maze.GetLength(0) && 
-                yNewPosition >= 0 && yNewPosition < _maze.GetLength(1) &&
-                _maze[yNewPosition, xNewPosition] == CellType.Wall)
+            if (newPosition.y >= 0 && newPosition.y < _maze.GetLength(0) - 1
+            && newPosition.x >= 0 && newPosition.x < _maze.GetLength(1) - 1
+            && _maze[newPosition.y, newPosition.x] == CellType.Wall)
             {
                 // Remove the wall between the current cell and the new cell
-                _maze[yPosition + yDirection / 2, xPosition + xDirection / 2] = CellType.Road;
-                GenerateMaze(xNewPosition, yNewPosition);
+                _maze[position.y + direction.y / 2, position.x + direction.x / 2] = CellType.Road;
+                GenerateMaze(newPosition);
             }
         }
-        CreateCycles(yPosition, xPosition);    
+        CreateCycles(position);    
     }
-
-    private void CreateCycles(int yPosition, int xPosition)
+    private void CreateCycles((int x, int y) position)
     {
         for (int i = 0; i < 4; i++)
         {
-            int xNewPosition = xPosition + possibleDirections[i].first;
-            int yNewPosition = yPosition + possibleDirections[i].second;
+            int xNewPosition = position.x + possibleDirections[i].x;
+            int yNewPosition = position.y + possibleDirections[i].y;
 
             // Check if the adjacent cell is visited
-            if (xNewPosition >= 0 && xNewPosition < _maze.GetLength(0) 
-                && yNewPosition >= 0 && yNewPosition < _maze.GetLength(1) 
+            if (xNewPosition > 0 && xNewPosition < _maze.GetLength(0) - 2 
+                && yNewPosition > 0 && yNewPosition < _maze.GetLength(1) - 2
                 && _maze[yNewPosition, xNewPosition] == CellType.Road)
             {
                 // Randomly decide to create a cycle
                 if (_random.Next(11) == 0) // 10% chance to create a cycle
                 {
                     // Remove the wall between the current cell and the adjacent visited cell
-                    _maze[yPosition + possibleDirections[i].second / 2, xPosition + possibleDirections[i].first / 2] = CellType.Road;
+                    _maze[position.y + possibleDirections[i].y / 2, position.x + possibleDirections[i].x / 2] = CellType.Road;
                 }
             }
         }
@@ -113,34 +108,33 @@ public class GameBoard
         int centerIndex = (_maze.GetLength(0) - 1)/2;
         for (int i = centerIndex - 2; i <= centerIndex + 2; i++)
         {
-            if (_maze[i, centerIndex-2] == CellType.Road) _maze[i, centerIndex-2] = CellType.Trap; ///Top Border
-            if (_maze[centerIndex-2, i] == CellType.Road) _maze[centerIndex-2, i] = CellType.Trap; ///Left Border
-            if (_maze[centerIndex + 2, i] == CellType.Road) _maze[centerIndex + 2, i] = CellType.Trap; ///Right Border
-            if (_maze[i, centerIndex + 2] == CellType.Road) _maze[i, centerIndex + 2] = CellType.Trap; ///Button Border
+            if (_maze[i, centerIndex-2] == CellType.Road) _maze[i, centerIndex-2] = CellType.Trap_Hiden; ///Top Border
+            if (_maze[centerIndex-2, i] == CellType.Road) _maze[centerIndex-2, i] = CellType.Trap_Hiden; ///Left Border
+            if (_maze[centerIndex + 2, i] == CellType.Road) _maze[centerIndex + 2, i] = CellType.Trap_Hiden; ///Right Border
+            if (_maze[i, centerIndex + 2] == CellType.Road) _maze[i, centerIndex + 2] = CellType.Trap_Hiden; ///Button Border
         }
     }
     
     private void SetTraps()
     {
-        for (int x = 1; x < _maze.GetLength(0) -1; x++)
+        for (int y = 1; y < _maze.GetLength(0) -1; y++)
         {
-            for (int y = 1; y < _maze.GetLength(1) - 1; y++)
+            for (int x = 1; x < _maze.GetLength(1) - 1; x++)
             {
-                if(_maze[x,y] == CellType.Road && FreeSpaceForTrap(x, y))
+                if(_maze[y,x] == CellType.Road && FreeSpaceForTrap(x, y))
                 {
-                    if (x > _size / 5 && y > _size / 5&& 
-                        x < _size - (_size / 5) && y < _size - (_size / 5))
+                    if (x > _size.x / 5 && y > _size.y / 5&&  x < _size.x - (_size.x / 5) && y < _size.x - (_size.y / 5))
                     {
-                        if (_random.Next(100) <= 25) _maze[x, y] = CellType.Trap; /// 25% chance Hard
+                        if (_random.Next(100) <= 25) _maze[y, x] = CellType.Trap_Hiden; /// 25% chance Hard
                     }
-                    else if (x > _size / 3 && y > _size / 3 &&
-                        x < _size - (_size / 3) && y < _size - (_size / 3))
+                    else if (x > _size.x / 3 && y > _size.y / 3 &&
+                        x < _size.x - (_size.x / 3) && y < _size.y - (_size.y / 3))
                     {
-                        if (_random.Next(100) <= 15) _maze[x, y] = CellType.Trap; /// 15% chance Medium
+                        if (_random.Next(100) <= 15) _maze[y, x] = CellType.Trap_Hiden; /// 15% chance Medium
                     }
                     else
                     {
-                        if (_random.Next(100) <= 10 ) _maze[x, y] = CellType.Trap; /// 10% chance Easy
+                        if (_random.Next(100) <= 10 ) _maze[y, x] = CellType.Trap_Hiden; /// 10% chance Easy
                     }      
                 }
             }
@@ -149,10 +143,10 @@ public class GameBoard
     private bool FreeSpaceForTrap(int x, int y)
     {
         int checker = 0;
-        if (_maze[x, y - 1] == CellType.Trap) checker++; //Up
-        if (_maze[x, y + 1] == CellType.Trap) checker++; //Down
-        if (_maze[x + 1, y] == CellType.Trap) checker++; //Right
-        if (_maze[x - 1, y] == CellType.Trap) checker++; //Left
+        if (_maze[x, y - 1] == CellType.Trap_Hiden) checker++; //Up
+        if (_maze[x, y + 1] == CellType.Trap_Hiden) checker++; //Down
+        if (_maze[x + 1, y] == CellType.Trap_Hiden) checker++; //Right
+        if (_maze[x - 1, y] == CellType.Trap_Hiden) checker++; //Left
         return checker == 0;
     }
 
@@ -160,17 +154,17 @@ public class GameBoard
     {
         foreach (Player player in playersGroup)
         {
-            _maze[player.position.first, player.position.second] = CellType.Player;
+            _maze[player.position.x, player.position.y] = CellType.Player;
         }
     }
     public void PrintMaze()
     {
-        for (int x = 0; x < _maze.GetLength(0); x++)
+        for (int y = 0; y < _maze.GetLength(0); y++)
         {
             string row = "";
-            for (int y = 0; y < _maze.GetLength(1); y++)
+            for (int x = 0; x < _maze.GetLength(1); x++)
             {
-                switch (_maze[x,y])
+                switch (_maze[y,x])
                 {
                     case CellType.Road:
                     {
@@ -187,9 +181,14 @@ public class GameBoard
                         row += "🙂";
                         break;
                     }
-                    case CellType.Trap:
+                    case CellType.Trap_Visible:
                     {
                         row += "TT";
+                        break;
+                    }
+                    case CellType.Trap_Hiden:
+                    {
+                        row += "  ";
                         break;
                     }
                 }

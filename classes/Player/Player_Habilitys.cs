@@ -1,33 +1,32 @@
 ﻿namespace Player_Utils;
-
-using System.Net.NetworkInformation;
 using Game_Board;
-using Pair_Type;
-using Utils;
 
 public partial class Player
 {
-    public static Pair[] posibleDirections = {
-        Utils.Directions[moveDirection.Up],
-        Utils.Directions[moveDirection.Down],
-        Utils.Directions[moveDirection.Rigth],
-        Utils.Directions[moveDirection.Left]
-    };
-    public static void WallDestroyer(GameBoard maze,Player player)
+    private (int x, int y)[] posibleMoves = new (int x, int y)[4];
+
+    private void SetPosibleMoves()
     {
-        List<Pair> destroyableWallPosition = new List<Pair>();
+        posibleMoves[0] = (position.x + Directions[moveDirection.Up].x, position.y + Directions[moveDirection.Up].y);
+        posibleMoves[1] = (position.x + Directions[moveDirection.Down].x, position.y + Directions[moveDirection.Down].y);
+        posibleMoves[2] = (position.x + Directions[moveDirection.Rigth].x, position.y + Directions[moveDirection.Rigth].y);
+        posibleMoves[3] = (position.x + Directions[moveDirection.Left].x, position.y + Directions[moveDirection.Left].y);
+    }
+    public void WallDestroyer(GameBoard maze)
+    {
+        SetPosibleMoves();
+        List<(int, int)> destroyableWallPosition = new List<(int,int)>();
         int numberOfDestroyableWalls = 0;
         for (int i = 0; i < 4; i++)
         {
-            Pair possibleWall = player.position + posibleDirections[i];
-            if (maze[possibleWall] == CellType.Wall)
+            if (maze[posibleMoves[i]] == CellType.Wall)
             {
-                destroyableWallPosition.Add(possibleWall);
+                destroyableWallPosition.Add(posibleMoves[i]);
                 numberOfDestroyableWalls++;
             }
         }
         Random dice = new Random();
-        Pair wallToDestroy = destroyableWallPosition[dice.Next(numberOfDestroyableWalls)];
+        (int x, int y) wallToDestroy = destroyableWallPosition[dice.Next(numberOfDestroyableWalls)];
         if (IsBorderWall(maze._size, wallToDestroy))
         {
             Console.Clear();
@@ -44,43 +43,33 @@ public partial class Player
             Console.ResetColor();
         }
     }
-    private static bool IsBorderWall(int mazeSize, Pair position) 
+    private static bool IsBorderWall((int x, int y) mazeSize,(int x, int y) position) 
     {
-        if (position.first == 0) return true; //Left Border
-        if (position.second == 0) return true; //Top Border
-        if (position.first > mazeSize) return true; //Right Border
-        if (position.second > mazeSize) return true; //Button Border
+        if (position.x == 0 || position.x > mazeSize.x) return true; //Left and Right Border
+        if (position.y == 0 || position.y > mazeSize.y) return true; //Top and Button Border
         return false;
     }
 
-    public static void Instinct (GameBoard board, Player player)
+    public void Instinct (GameBoard board)
     {
+        SetPosibleMoves();
+        for(int i = 0; i < posibleMoves.Length; i++)
+        {
+            if(board[posibleMoves[i]] == CellType.Trap_Hiden)
+            {
+                board[posibleMoves[i]] = CellType.Trap_Visible;
+            }
+        }
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Yellow;
-        if (board[player.position + Utils.Directions[moveDirection.Up]] == CellType.Trap)
-        {
-            Console.WriteLine("Hay una trampa al norte");
-        }
-        if (board[player.position + Utils.Directions[moveDirection.Down]] == CellType.Trap)
-        {
-            Console.WriteLine("Hay una trampa al sur");
-        }
-        if (board[player.position + Utils.Directions[moveDirection.Rigth]] == CellType.Trap)
-        {
-            Console.WriteLine("Hay una trampa al este");
-        }
-        if (board[player.position + Utils.Directions[moveDirection.Left]] == CellType.Trap)
-        {
-            Console.WriteLine("Hay una trampa al oeste");
-        }
-        Console.ResetColor();
+        Console.WriteLine("Trampas mostradas");
     }
 
-    public static void Swap (Player[] playersGroup, Player player)
+    public void Swap (Player[] playersGroup)
     {
         Random dice = new Random();
         int playerToSwap = dice.Next(playersGroup.Length);
-        if (playersGroup[playerToSwap].position == player.position)
+        if (playersGroup[playerToSwap].position == position)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
@@ -89,9 +78,9 @@ public partial class Player
         }
         else
         {
-            Pair temp = playersGroup[playerToSwap].position;
-            playersGroup[playerToSwap].position = player.position;
-            player.position = temp;
+            (int x, int y) temp = playersGroup[playerToSwap].position;
+            playersGroup[playerToSwap].position = position;
+            position = temp;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("El hechizo funciona y eres transportado a un lugar mejor... tal vez");
@@ -99,20 +88,31 @@ public partial class Player
         }
     }   
 
-    public static void PutTrap(GameBoard board, Player player)
+    public void PutTrap(GameBoard board, Player player)
     {
         
     }
 
-    public static void GoblinSummon(GameBoard board, Player player)
+    public void GoblinSummon(GameBoard board)
     {
-        foreach(Pair direction in posibleDirections)
+        int disabledTraps = 0;
+        foreach((int x, int y) direction in posibleMoves)
         {
-            Pair nearCell = player.position + direction;
-            if(board[nearCell] == CellType.Trap)
+            (int x, int y) nearCell = (position.x + direction.x,position.x + direction.y);
+            if(board[nearCell] == CellType.Road)
             {
                 board[nearCell] = CellType.Road;
+                disabledTraps++;
             }
         }
+        Console.Clear();
+        Console.WriteLine($"Se desarmaron {disabledTraps} trampas");
     }
+    public static Dictionary<moveDirection, (int x, int y)> Directions = new Dictionary<moveDirection, (int x, int y)>()
+    {
+        {moveDirection.Up, (0,-1)},
+        {moveDirection.Down, (0,1)},
+        {moveDirection.Rigth, (1,0)},
+        {moveDirection.Left, (-1,0)}
+    };
 }
