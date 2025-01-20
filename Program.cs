@@ -60,7 +60,7 @@ class Program
 
             var classMenu = new SelectionPrompt<string>()
                 .Title($"[yellow]{name}[/] selecciona una Clase: ")
-                .AddChoices(["Guerrero", "Mago", "Explorador", "Invocador"]);
+                .AddChoices(["Guerrero", "Mago", "Explorador", "Invocador", "Viajero"]);
 
             playerType type = AnsiConsole.Prompt(classMenu) switch
             {
@@ -68,6 +68,7 @@ class Program
                 "Mago" => playerType.Mage,
                 "Explorador" => playerType.Explorer,
                 "Invocador" => playerType.Summoner,
+                "Viajero" => playerType.Traveler,
             };
 
             playersGroup[i] = new Player(name, type);
@@ -111,9 +112,9 @@ class Program
             {
                 Console.Clear();
                 Console.WriteLine();
-                playersGroup[i].numberOfMoves = 3;
+                playersGroup[i].numberOfMoves += 3;
                 if (playersGroup[i].habilityColdDown > 0) playersGroup[i].habilityColdDown--;
-
+                
                 var turnMenu = new SelectionPrompt<string>()
                     .Title($"Turno de {playersGroup[i]._name}")
                     .Title("Acciones: ")
@@ -153,6 +154,7 @@ class Program
                                     playerHability.Swap => () => playersGroup[i].Swap(playersGroup),
                                     playerHability.Instinct => () => playersGroup[i].Instinct(maze),
                                     playerHability.GoblinSummon => () => playersGroup[i].GoblinSummon(maze),
+                                    playerHability.RefreshingBreeze => () => playersGroup[i].RefreshingBreeze(),
                                 };
                                 useHability.Invoke();
                                 playersGroup[i].habilityColdDown = 3;

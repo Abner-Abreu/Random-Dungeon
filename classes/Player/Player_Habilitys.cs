@@ -1,5 +1,6 @@
 ﻿namespace Player_Utils;
 using Game_Board;
+using Spectre.Console;
 
 public partial class Player
 {
@@ -88,9 +89,10 @@ public partial class Player
         }
     }
 
-    public void PutTrap(GameBoard board, Player player)
+    public void RefreshingBreeze()
     {
-
+        numberOfMoves += 2;
+        Console.WriteLine("Te envuelve una brisa refrescante");
     }
 
     public void GoblinSummon(GameBoard board)
@@ -99,7 +101,6 @@ public partial class Player
         int disabledTraps = 0;
         foreach ((int x, int y) direction in posibleMoves)
         {
-            Console.WriteLine($"{direction.x} {direction.y}");
             if (direction.x <= board._size.x && direction.y <= board._size.y)
             {
                 if (board[direction] == CellType.Trap_Hiden || board[direction] == CellType.Trap_Visible)

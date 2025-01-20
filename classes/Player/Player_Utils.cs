@@ -6,8 +6,8 @@ public enum playerType
     Warrior,
     Mage,
     Explorer,
-    Cleric,
     Summoner,
+    Traveler,
     None
 }
 public enum playerHability
@@ -15,8 +15,8 @@ public enum playerHability
     WallDestroyer,
     Instinct,
     Swap,
-    Ilumination,
-    GoblinSummon
+    GoblinSummon,
+    RefreshingBreeze
 }
 public enum moveDirection
 {
@@ -33,15 +33,15 @@ public partial class Player
         {playerType.Warrior, playerHability.WallDestroyer},
         {playerType.Explorer, playerHability.Instinct},
         {playerType.Mage, playerHability.Swap},
-        {playerType.Cleric, playerHability.Ilumination},
-        {playerType.Summoner, playerHability.GoblinSummon}
+        {playerType.Summoner, playerHability.GoblinSummon},
+        {playerType.Traveler, playerHability.RefreshingBreeze}
     };
     public static Dictionary<playerHability, string> HabilityDescription = new Dictionary<playerHability, string>()
     {
         {playerHability.WallDestroyer, "Destructor de Paredes: La ira te inunda y destruyes una pared cercana al azar"},
         {playerHability.Instinct, "Instinto: Tu instinto de explorador te advierte de la direccion del peligro"},
         {playerHability.Swap, "Intercambio: Intercambia tu posición con otro aventurero"},
-        {playerHability.Ilumination, "Iluminación: Recibe la guía divina"},
-        {playerHability.GoblinSummon, "Invocar Goblin: Invocas a un pequeño goblin que desactiva las trampas cercanas a ti"}
+        {playerHability.GoblinSummon, "Invocar Goblin: Invocas a un pequeño goblin que desactiva las trampas cercanas a ti"},
+        {playerHability.RefreshingBreeze, "Brisa Refrescante: La brisa refrezca tu agotado cuerpo permitiendote seguir avanzando"}
     };
 }

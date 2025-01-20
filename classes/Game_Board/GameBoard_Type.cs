@@ -1,5 +1,6 @@
 ﻿namespace Game_Board;
 using Player_Utils;
+using Spectre.Console;
 
 public enum CellType
     {
@@ -7,6 +8,8 @@ public enum CellType
         Road,
         Trap_Hiden,
         Trap_Visible,
+        Buff,
+        Event,
         Player
     }
 public class GameBoard
@@ -164,22 +167,22 @@ public class GameBoard
                 {
                     case CellType.Road:
                     {
-                        row += "  ";
+                        row += "▓▓";
                         break;
                     }
                     case CellType.Wall:
                     {
-                        row += "██";
+                        row += "[grey]██[/]";
                         break;
                     }
                     case CellType.Player:
                     {
-                        row += "🙂";
+                        row += "[yellow]██[/]";
                         break;
                     }
                     case CellType.Trap_Visible:
                     {
-                        row += "TT";
+                        row += "[red]██[/]";
                         break;
                     }
                     case CellType.Trap_Hiden:
@@ -187,10 +190,22 @@ public class GameBoard
                         row += "TT";
                         break;
                     }
+                    case CellType.Buff:
+                    {
+                        row += "[green]░░[/]";
+                        break;
+                    }
+                    case CellType.Event:
+                    {
+                        row += "[blue]██[/]";
+                        break;
+                    }
                 }
             }
-            Console.WriteLine(row);
+            AnsiConsole.MarkupLine(row);
         }
         Console.WriteLine();
     }
+
+    
 }
