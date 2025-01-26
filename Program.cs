@@ -24,9 +24,9 @@ class Program
         Console.Clear();
         var font = FigletFont.Load(@"fonts\delta_corps_priest.flf");
         AnsiConsole.Write(
-            new FigletText(font, "HOLA")
+            new FigletText(font, "Random Dungeon")
             .Centered()
-            .Color(Color.Aqua)
+            .Color(Color.White)
         );
         Console.ReadKey();
 
