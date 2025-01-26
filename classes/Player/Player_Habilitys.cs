@@ -4,6 +4,28 @@ using Spectre.Console;
 
 public partial class Player
 {
+
+    public void UseHability(GameBoard board, List<Player> playersGroup)
+    {
+        if (_mana >= 3)
+        {
+            Action useHability = _playerHability switch
+            {
+                playerHability.WallDestroyer => () => WallDestroyer(board),
+                playerHability.Swap => () => Swap(playersGroup),
+                playerHability.Instinct => () => Instinct(board),
+                playerHability.GoblinSummon => () => GoblinSummon(board),
+                playerHability.RefreshingBreeze => RefreshingBreeze,
+            };
+            useHability.Invoke();
+            _mana -= 3;
+        }
+        else
+        {
+            Console.WriteLine($"Necesitas {3 - _mana} puntos de maná más para activar tu habilidad");
+            Console.ReadKey(true);
+        }
+    }
     private (int x, int y)[] posibleMoves = new (int x, int y)[4];
 
     private void SetPosibleMoves()
@@ -66,10 +88,10 @@ public partial class Player
         Console.WriteLine("Trampas mostradas");
     }
 
-    public void Swap(Player[] playersGroup)
+    public void Swap(List<Player> playersGroup)
     {
         Random dice = new Random();
-        int playerToSwap = dice.Next(playersGroup.Length);
+        int playerToSwap = dice.Next(playersGroup.Count);
         if (playersGroup[playerToSwap].position == position)
         {
             Console.Clear();
@@ -91,7 +113,7 @@ public partial class Player
 
     public void RefreshingBreeze()
     {
-        numberOfMoves += 2;
+        _energy += 2;
         Console.WriteLine("Te envuelve una brisa refrescante");
     }
 

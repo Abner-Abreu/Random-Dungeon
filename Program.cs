@@ -17,34 +17,51 @@ class Program
             }
         }
     }
+
+    
     static void Main()
     {
         Console.Clear();
-        #region Players Number
-        int numberOfPlayers = 0;
-        var selectionActions = new Dictionary<string, Action>()
+        var font = FigletFont.Load(@"fonts\delta_corps_priest.flf");
+        AnsiConsole.Write(
+            new FigletText(font, "HOLA")
+            .Centered()
+            .Color(Color.Aqua)
+        );
+        Console.ReadKey();
+
+        #region Game Mode Selection
+        var mapSizeMenu = new SelectionPrompt<string>()
+            .Title("Seleccione el tamaño del mapa")
+            .AddChoices("Pequeño", "Medio", "Grande");
+        MapSize mapSize = AnsiConsole.Prompt(mapSizeMenu) switch
         {
-            {"Dos Jugadores", () => numberOfPlayers = 2 },
-            {"Cuatro Jugadores", () => numberOfPlayers = 4}
+            "Pequeño" => MapSize.Small,
+            "Medio" => MapSize.Medium,
+            "Grande" => MapSize.Large
         };
+
         var startMenu = new SelectionPrompt<string>()
             .Title("[green]Seleccione la cantidad de jugadores: [/]")
-            .AddChoices(selectionActions.Keys);
-        selectionActions[AnsiConsole.Prompt(startMenu)].Invoke();
+            .AddChoices("Dos Jugadores", "Cuatro Jugadores");
+        int numberOfPlayers = AnsiConsole.Prompt(startMenu) switch
+        {
+            "Dos Jugadores" => 2,
+            "Cuatro Jugadores" => 4
+        };
         #endregion
 
-        #region Set Players
-        Player[] playersGroup = new Player[numberOfPlayers];
+        #region Character Creation
+        List<Player> playersGroup = new List<Player>();
         for (int i = 0; i < numberOfPlayers; i++)
         {
             Console.Clear();
-            string? name;
             var insertName = new TextPrompt<string>($"Introduce el numbre del [yellow]Jugador {i + 1}[/]: ")
                 .Validate(name =>
                 {
                     if (name == null)
                     {
-                        return ValidationResult.Error("[red]El nombre no puede estar vacío[/]");
+                        return ValidationResult.Error("[red]Necesitas un nombre...[/]");
                     }
                     if (name.Contains(' '))
                     {
@@ -54,9 +71,19 @@ class Program
                     {
                         return ValidationResult.Error("[red]El nombre debe contener entre 3 y 10 caracteres[/]");
                     }
+                    if (playersGroup.Count > 0)
+                    {
+                        foreach (Player player in playersGroup)
+                        {
+                            if (name.ToUpper() == player._name.ToUpper())
+                            {
+                                return ValidationResult.Error("[red]No pueden haber nombres repetidos[/]");
+                            }
+                        }
+                    }
                     return ValidationResult.Success();
                 });
-            name = AnsiConsole.Prompt(insertName);
+            string name = AnsiConsole.Prompt(insertName);
 
             var classMenu = new SelectionPrompt<string>()
                 .Title($"[yellow]{name}[/] selecciona una Clase: ")
@@ -70,19 +97,18 @@ class Program
                 "Invocador" => playerType.Summoner,
                 "Viajero" => playerType.Traveler,
             };
-
-            playersGroup[i] = new Player(name, type);
+            playersGroup.Add(new Player(name, type));
         }
         #endregion
 
-        #region Preeliminares
-
+        #region Map Generation
         WaitAnimation("Generando Laberinto");
 
-        GameBoard maze = numberOfPlayers switch
+        GameBoard maze = mapSize switch
         {
-            2 => new GameBoard(15),
-            4 => new GameBoard(31)
+            MapSize.Small => new GameBoard(21),
+            MapSize.Medium => new GameBoard(31),
+            MapSize.Large => new GameBoard(41)
         };
 
 
@@ -108,76 +134,62 @@ class Program
         do
         {
             numberOfTurns++;
-            for (int i = 0; i < numberOfPlayers; i++)
+            foreach (Player activePlayer in playersGroup)
             {
                 Console.Clear();
                 Console.WriteLine();
-                playersGroup[i].numberOfMoves += 3;
-                if (playersGroup[i].habilityColdDown > 0) playersGroup[i].habilityColdDown--;
-                
+                activePlayer._energy += 3;
+                if (activePlayer._mana < 3)activePlayer._mana++;
+
                 var turnMenu = new SelectionPrompt<string>()
-                    .Title($"Turno de {playersGroup[i]._name}")
-                    .Title("Acciones: ")
+                    .Title($"Turno de {activePlayer._name}")
                     .AddChoices(["Moverse", "Estado", "Usar Habilidad", "Terminar Turno"]);
 
                 bool turnEnded = false;
-                while (playersGroup[i].numberOfMoves > 0 && turnEnded == false)
+                while (activePlayer._energy > 0 && turnEnded == false && isVictoryAchieved == false)
                 {
                     Action action = AnsiConsole.Prompt(turnMenu) switch
                     {
-                        "Moverse" => () =>
-                        {
-                            bool cancelMove = false;
-                            while (playersGroup[i].numberOfMoves > 0 && cancelMove == false)
-                            {
-                                Console.Clear();
-                                maze.PrintMaze();
-                                Action move = Console.ReadKey(false).Key switch
-                                {
-                                    ConsoleKey.UpArrow => () => playersGroup[i].Move(maze, moveDirection.Up),
-                                    ConsoleKey.DownArrow => () => playersGroup[i].Move(maze, moveDirection.Down),
-                                    ConsoleKey.RightArrow => () => playersGroup[i].Move(maze, moveDirection.Rigth),
-                                    ConsoleKey.LeftArrow => () => playersGroup[i].Move(maze, moveDirection.Left),
-                                    ConsoleKey.Backspace => () => cancelMove = true,
-                                    _ => () => {}
-                                };
-                                move.Invoke();
-                            }
-                        },
-                        "Usar Habilidad" => () =>
-                        {
-                            if (playersGroup[i].habilityColdDown == 0)
-                            {
-                                Action useHability = playersGroup[i]._playerHability switch
-                                {
-                                    playerHability.WallDestroyer => () => playersGroup[i].WallDestroyer(maze),
-                                    playerHability.Swap => () => playersGroup[i].Swap(playersGroup),
-                                    playerHability.Instinct => () => playersGroup[i].Instinct(maze),
-                                    playerHability.GoblinSummon => () => playersGroup[i].GoblinSummon(maze),
-                                    playerHability.RefreshingBreeze => () => playersGroup[i].RefreshingBreeze(),
-                                };
-                                useHability.Invoke();
-                                playersGroup[i].habilityColdDown = 3;
-                            }
-                            else
-                            {
-                                Console.WriteLine($"No puedes usar tu habilidad hasta dentro de {playersGroup[i].habilityColdDown} turnos");
-                                Console.ReadKey(true);
-                            }
-                        },
+                        "Moverse" => () => activePlayer.ShowMovement(maze, playersGroup),
+                        "Estado" => activePlayer.Status,
+                        "Usar Habilidad" => () => activePlayer.UseHability(maze, playersGroup),
                         "Terminar Turno" => () => turnEnded = true,
                     };
                     action.Invoke();
-                }
-                if (isVictoryAchieved)
-                {
-                    Console.Clear();
-                    Console.WriteLine($"{playersGroup[i]._name} ha llegado al centro del laberinto");
-                    Console.WriteLine($"Logró la victoria tras {numberOfTurns} turnos");
-                    Console.WriteLine("FELICIDADES!!!");
+                    if(maze.RaceWinned(activePlayer))
+                    {
+                        isVictoryAchieved = true;
+                        Console.Clear();
+                        AnsiConsole.WriteLine($"[red]{activePlayer._name} HA GANADO LA PARTIDA[/]");
+                        Console.ReadKey(false);
+                        activePlayer.Status();
+                        Console.ReadKey(false);
+                    }
                 }
             }
         } while (isVictoryAchieved == false);
+        #endregion
+
+        #region End Game
+        Console.Clear();
+        int totalOfWalkedCells = 0;
+        int totalOfActivatedTraps = 0;
+        foreach (Player player in playersGroup) 
+        {
+            totalOfWalkedCells += player._numberOfMoves;
+            totalOfActivatedTraps += player._numberOfActivatedTraps;
+        }
+        
+        var finalStats = new Table();
+        finalStats.AddColumn("[blue]Resultados Finales[/]");
+        finalStats.AddRow($"Turnos Jugados: [green]{numberOfTurns}[/]");
+        finalStats.AddRow($"Casillas Recorridas (por todos los jugadores): [green]{totalOfWalkedCells}[/]");
+        finalStats.AddRow($"Trampas Activadas (por todos los jugadores): [green]{totalOfActivatedTraps}[/]");
+        finalStats.AddRow($"Trampas Sin Activar: [green]{maze.numberOfTraps - totalOfActivatedTraps}[/]");
+        finalStats.Border = TableBorder.Rounded;
+        finalStats.BorderColor(Color.Blue);
+
+        AnsiConsole.Write(finalStats);
         #endregion
     }
 }

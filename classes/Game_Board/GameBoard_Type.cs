@@ -8,13 +8,20 @@ public enum CellType
         Road,
         Trap_Hiden,
         Trap_Visible,
-        Buff,
-        Event,
         Player
     }
-public class GameBoard
+
+public enum MapSize
+    {
+        Small,
+        Medium,
+        Large
+    }
+public partial class GameBoard
 {
     private CellType[,] _maze;
+
+    public int numberOfTraps = 0;
     public (int x, int y) _size { get; private set; }
     private Random _random = new Random();
     
@@ -124,16 +131,28 @@ public class GameBoard
                 {
                     if (x > _size.x / 5 && y > _size.y / 5&&  x < _size.x - (_size.x / 5) && y < _size.x - (_size.y / 5))
                     {
-                        if (_random.Next(100) <= 25) _maze[y, x] = CellType.Trap_Hiden; /// 25% chance Hard
+                        if (_random.Next(100) <= 25)
+                        { 
+                            _maze[y, x] = CellType.Trap_Hiden; /// 25% chance Hard
+                            numberOfTraps++;
+                        } 
                     }
                     else if (x > _size.x / 3 && y > _size.y / 3 &&
                         x < _size.x - (_size.x / 3) && y < _size.y - (_size.y / 3))
                     {
-                        if (_random.Next(100) <= 15) _maze[y, x] = CellType.Trap_Hiden; /// 15% chance Medium
+                        if (_random.Next(100) <= 15)
+                        { 
+                            _maze[y, x] = CellType.Trap_Hiden; /// 15% chance Medium
+                            numberOfTraps++;
+                        } 
                     }
                     else
                     {
-                        if (_random.Next(100) <= 10 ) _maze[y, x] = CellType.Trap_Hiden; /// 10% chance Easy
+                        if (_random.Next(100) <= 10 ) 
+                        { 
+                            _maze[y, x] = CellType.Trap_Hiden; /// 10% chance Easy
+                            numberOfTraps++;
+                        } 
                     }      
                 }
             }
@@ -149,7 +168,7 @@ public class GameBoard
         return checker == 0;
     }
 
-    public void UpdatePlayersPosition(Player[] playersGroup)
+    public void UpdatePlayersPosition(List<Player> playersGroup)
     {
         foreach (Player player in playersGroup)
         {
@@ -187,17 +206,7 @@ public class GameBoard
                     }
                     case CellType.Trap_Hiden:
                     {
-                        row += "TT";
-                        break;
-                    }
-                    case CellType.Buff:
-                    {
-                        row += "[green]░░[/]";
-                        break;
-                    }
-                    case CellType.Event:
-                    {
-                        row += "[blue]██[/]";
+                        row += "▓▓";
                         break;
                     }
                 }
@@ -206,6 +215,5 @@ public class GameBoard
         }
         Console.WriteLine();
     }
-
     
 }

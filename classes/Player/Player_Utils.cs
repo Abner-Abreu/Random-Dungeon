@@ -8,7 +8,6 @@ public enum playerType
     Explorer,
     Summoner,
     Traveler,
-    None
 }
 public enum playerHability
 {
