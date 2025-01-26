@@ -36,7 +36,6 @@ public partial class GameBoard
         _maze = new CellType[size+2, size+2]; ///y,x
         // Generate the maze starting from (1, 1)
         GenerateMaze((1,1));
-        SetCenterRoomTraps();
         SetTraps();
         SetCenterRoom();
     }
@@ -107,17 +106,6 @@ public partial class GameBoard
             {
                 _maze[x, y] = CellType.Road;
             }
-        }
-    }
-    private void SetCenterRoomTraps()
-    {
-        int centerIndex = (_maze.GetLength(0) - 1)/2;
-        for (int i = centerIndex - 2; i <= centerIndex + 2; i++)
-        {
-            if (_maze[i, centerIndex-2] == CellType.Road) _maze[i, centerIndex-2] = CellType.Trap_Hiden; ///Top Border
-            if (_maze[centerIndex-2, i] == CellType.Road) _maze[centerIndex-2, i] = CellType.Trap_Hiden; ///Left Border
-            if (_maze[centerIndex + 2, i] == CellType.Road) _maze[centerIndex + 2, i] = CellType.Trap_Hiden; ///Right Border
-            if (_maze[i, centerIndex + 2] == CellType.Road) _maze[i, centerIndex + 2] = CellType.Trap_Hiden; ///Button Border
         }
     }
     
