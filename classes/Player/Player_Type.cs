@@ -30,10 +30,10 @@ public partial class Player
             board.PrintMaze(position);
             Action move = Console.ReadKey(false).Key switch
             {
-                ConsoleKey.UpArrow => () => Move(board, moveDirection.Up),
-                ConsoleKey.DownArrow => () => Move(board, moveDirection.Down),
-                ConsoleKey.RightArrow => () => Move(board, moveDirection.Rigth),
-                ConsoleKey.LeftArrow => () => Move(board, moveDirection.Left),
+                ConsoleKey.UpArrow => () => Move(board, moveDirection.Up, playersGroup),
+                ConsoleKey.DownArrow => () => Move(board, moveDirection.Down, playersGroup),
+                ConsoleKey.RightArrow => () => Move(board, moveDirection.Rigth, playersGroup),
+                ConsoleKey.LeftArrow => () => Move(board, moveDirection.Left, playersGroup),
                 ConsoleKey.Backspace => () => cancelMove = true,
                 _ => () => { }
             };
@@ -41,17 +41,22 @@ public partial class Player
             board.UpdatePlayersPosition(playersGroup);
         }
     }
-    public void Move(GameBoard board, moveDirection direction)
+    public void Move(GameBoard board, moveDirection direction, List<Player> playersGroup)
     {
         (int x, int y) directionToMove = Directions[direction];
         if (ValidMove(board, directionToMove))
         {
             board[position] = CellType.Road;
             position = (position.x + directionToMove.x, position.y + directionToMove.y); ;
-            ActivateTrap(board);
+            ActivateTrap(board,playersGroup);
             board[position] = CellType.Player;
             _energy--;
             _numberOfMoves++;
+            if(board.RaceWinned(this)) ///Victory Condition Achieved
+            {
+                _energy = 0;
+                _mana = 0;
+            }
         }
     }
     public bool ValidMove(GameBoard board, (int x, int y) directionToMove)

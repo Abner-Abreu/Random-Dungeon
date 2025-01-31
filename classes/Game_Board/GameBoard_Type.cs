@@ -110,7 +110,7 @@ public partial class GameBoard
         }
     }
     
-    private void SetTraps()
+    public void SetTraps()
     {
         for (int y = 1; y < _maze.GetLength(0) -1; y++)
         {
@@ -120,7 +120,7 @@ public partial class GameBoard
                 {
                     if (x > _size.x / 5 && y > _size.y / 5&&  x < _size.x - (_size.x / 5) && y < _size.x - (_size.y / 5))
                     {
-                        if (_random.Next(100) <= 25)
+                        if (_random.Next(100) < 25)
                         { 
                             _maze[y, x] = CellType.Trap_Hiden; /// 25% chance Hard
                             numberOfTraps++;
@@ -129,7 +129,7 @@ public partial class GameBoard
                     else if (x > _size.x / 3 && y > _size.y / 3 &&
                         x < _size.x - (_size.x / 3) && y < _size.y - (_size.y / 3))
                     {
-                        if (_random.Next(100) <= 15)
+                        if (_random.Next(100) < 15)
                         { 
                             _maze[y, x] = CellType.Trap_Hiden; /// 15% chance Medium
                             numberOfTraps++;
@@ -137,7 +137,7 @@ public partial class GameBoard
                     }
                     else
                     {
-                        if (_random.Next(100) <= 10 ) 
+                        if (_random.Next(100) < 10 ) 
                         { 
                             _maze[y, x] = CellType.Trap_Hiden; /// 10% chance Easy
                             numberOfTraps++;
