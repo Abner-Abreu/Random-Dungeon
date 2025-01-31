@@ -60,7 +60,7 @@ A lo largo de todo el tablero están colocadas trampas que son activadas cuando 
 + *Trampa Anti-Maná*: al activar esta trampa el jugador pierde maná (-3 puntos) impidiendo el uso de habilidades o aumentando el tiempo de enfriamiento (si el maná origanal es menor que el perdido queda en negativo aumentando el tiempo de enfriamiento)  
 + *Trampa de Cambio de Pasado*: al activar esta trampa el jugador cambia otra a clase (y a su respectiva habilidad) diferente a la suya elegida al azar
 + *Trampa de Re-Aparición de Trampas*: al activar esta trampa las trampas de todo el mapa se vuelven a generar, cambiando su ubicación y agregando otras nuevas. Primero elimina todas las trampas existentes, entonces vuelve a generar las trampas y actualiza la posición de los jugadores en el mapa
-+ *Trampa de Teletransporte*: al activar esta trampa la posición del jugador cambia (en función de la posición origanl, de manera que se mantenga a una distancia semejante del centro)
++ *Trampa de Teletransporte*: al activar esta trampa la posición del jugador cambia (en función de la posición origanl, de manera que se mantenga a una distancia semejante del centro). La nueva posición será siempre una casilla transitable y nunca estará en la habitación central
 ### Movimiento ###
 Cada personaje puede moverse en cuatro direcciones (`arriba`, `abajo`, `izquierda` y `derecha`) por las casillas transitables mientras tenga energía suficiente  
 + Al seleccionar la opción `Moverse` el jugador usa las flechas del teclado para decidir la dirección de movimiento
@@ -73,4 +73,8 @@ Cada jugador puede seleccionar una clase para su personaje al inicio de la parti
   + *Mago*: su habilidad `Intercambio` selecciona al azar un personaje de entre todos los jugadores e intercambia sus posiciones, si la posición del personaje escogido es igual a la suya la habilidad falla   
   + *Explorador*: su habilidad `Instinto` chequea las casillas adyacentes y vuelve visibles las trampas, marcandolas en color rojo en el mapa
   + *Invocador*: su habilidad `Invocar Goblin` chequea las casillas adyacentes al jugador y elimina las trampas sin revelar su ubicación o si habían trampas  
-  + *Viajero*: su habilidad `Brisa Refrescante` aumenta en dos puntos la energía del personaje, permitiendole realizar dos movimientos extra  
+  + *Viajero*: su habilidad `Brisa Refrescante` aumenta en dos puntos la energía del personaje, permitiendole realizar dos movimientos extra   
+### Condición de Victoria ###
+Un jugador cumple con la condición de victoria al alcanzar la habitación central
+  + En cada movimiento realizado por el jugador se comprueba la `Condición de Victoria` comparando la posición del jugador con el interior de la habitación central  
+  + Si cumple la condición la partida termina y se muestran las estadísticas finales
