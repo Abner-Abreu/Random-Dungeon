@@ -184,8 +184,6 @@ class Program
                             .LeftJustified()
                             .Color(Color.Green));
                         Console.ReadKey(false);
-                        activePlayer.Status();
-                        Console.ReadKey(false);
                     }
                 }
             }
