@@ -7,14 +7,14 @@ public class Tutorial
     public static void ControlTutorial()
     {
         Console.WriteLine(@"Controles Básicos:
-▲▼ Para navegar por los menús
+↑ ↓ Para navegar por los menús
 Enter Para seleccionar una opción
 
 Movimiento de los Personajes:
-▲ - Arriba
-► - Derecha
-◄ - Izquierda
-▼ - Abajo
+↑ - Arriba
+→ - Derecha
+← - Izquierda
+↓ - Abajo
 BackSpace - Dejar de moverse
 ");
         Console.ReadKey(false);
