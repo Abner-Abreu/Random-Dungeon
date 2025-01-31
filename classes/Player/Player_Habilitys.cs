@@ -16,6 +16,7 @@ public partial class Player
                 playerHability.Instinct => () => Instinct(board),
                 playerHability.GoblinSummon => () => GoblinSummon(board),
                 playerHability.RefreshingBreeze => RefreshingBreeze,
+                _ => ()=>{}
             };
             useHability.Invoke();
             _mana -= 3;

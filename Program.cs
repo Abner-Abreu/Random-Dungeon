@@ -1,6 +1,7 @@
 ﻿using Game_Board;
 using Player_Utils;
 using Spectre.Console;
+using Tutorials;
 class Program
 {
     public static void WaitAnimation(string message)
@@ -17,20 +18,48 @@ class Program
             }
         }
     }
-
     
     static void Main()
     {
+        #region Game Start
         Console.Clear();
-        var font = FigletFont.Load(@"fonts\delta_corps_priest.flf");
-        AnsiConsole.Write(
+        Console.CursorVisible = false;
+        string fontPosition = Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "fonts", "delta_corps_priest.flf");
+        var font = FigletFont.Load(fontPosition);
+        Action ShowTitle = ()=> AnsiConsole.Write(
             new FigletText(font, "Random Dungeon")
-            .Centered()
-            .Color(Color.White)
+            .LeftJustified()
+            .Color(Color.Blue)
         );
-        Console.ReadKey();
+
+        var startMenu = new SelectionPrompt<string>()
+            .AddChoices("Jugar", "Tutorial", "Salir");
+        
+        bool newGame = false;
+        while (newGame == false)
+        {
+            Console.Clear();
+            ShowTitle.Invoke();
+            Action startMenuAction = AnsiConsole.Prompt(startMenu) switch
+            {
+                "Jugar" => () => newGame = true,
+                "Tutorial" => Tutorial.ShowTutorial,
+                "Salir" => ()=> {Environment.Exit(0);}
+            };
+            startMenuAction.Invoke();
+        }
+        #endregion
 
         #region Game Mode Selection
+        var numberOfPlayersMenu = new SelectionPrompt<string>()
+            .Title("[green]Seleccione la cantidad de jugadores: [/]")
+            .AddChoices("Dos Jugadores", "Cuatro Jugadores");
+        int numberOfPlayers = AnsiConsole.Prompt(numberOfPlayersMenu) switch
+        {
+            "Dos Jugadores" => 2,
+            "Cuatro Jugadores" => 4
+        };
+
         var mapSizeMenu = new SelectionPrompt<string>()
             .Title("Seleccione el tamaño del mapa")
             .AddChoices("Pequeño", "Medio", "Grande");
@@ -39,15 +68,6 @@ class Program
             "Pequeño" => MapSize.Small,
             "Medio" => MapSize.Medium,
             "Grande" => MapSize.Large
-        };
-
-        var startMenu = new SelectionPrompt<string>()
-            .Title("[green]Seleccione la cantidad de jugadores: [/]")
-            .AddChoices("Dos Jugadores", "Cuatro Jugadores");
-        int numberOfPlayers = AnsiConsole.Prompt(startMenu) switch
-        {
-            "Dos Jugadores" => 2,
-            "Cuatro Jugadores" => 4
         };
         #endregion
 
@@ -59,7 +79,7 @@ class Program
             var insertName = new TextPrompt<string>($"Introduce el numbre del [yellow]Jugador {i + 1}[/]: ")
                 .Validate(name =>
                 {
-                    if (name == null)
+                    if (name is null)
                     {
                         return ValidationResult.Error("[red]Necesitas un nombre...[/]");
                     }
@@ -84,7 +104,7 @@ class Program
                     return ValidationResult.Success();
                 });
             string name = AnsiConsole.Prompt(insertName);
-
+            Tutorial.ShowClasses();
             var classMenu = new SelectionPrompt<string>()
                 .Title($"[yellow]{name}[/] selecciona una Clase: ")
                 .AddChoices(["Guerrero", "Mago", "Explorador", "Invocador", "Viajero"]);
@@ -106,9 +126,9 @@ class Program
 
         GameBoard maze = mapSize switch
         {
-            MapSize.Small => new GameBoard(21),
-            MapSize.Medium => new GameBoard(31),
-            MapSize.Large => new GameBoard(41)
+            MapSize.Small => new GameBoard(15),
+            MapSize.Medium => new GameBoard(25),
+            MapSize.Large => new GameBoard(35)
         };
 
 
@@ -138,7 +158,7 @@ class Program
             {
                 Console.Clear();
                 Console.WriteLine();
-                activePlayer._energy += 3;
+                if (activePlayer._energy <= 0) activePlayer._energy += 3;
                 if (activePlayer._mana < 3)activePlayer._mana++;
 
                 var turnMenu = new SelectionPrompt<string>()
@@ -160,7 +180,9 @@ class Program
                     {
                         isVictoryAchieved = true;
                         Console.Clear();
-                        AnsiConsole.WriteLine($"[red]{activePlayer._name} HA GANADO LA PARTIDA[/]");
+                        AnsiConsole.Write(new FigletText(font, "VICTORIA")
+                            .LeftJustified()
+                            .Color(Color.Green));
                         Console.ReadKey(false);
                         activePlayer.Status();
                         Console.ReadKey(false);
@@ -186,7 +208,6 @@ class Program
         finalStats.AddRow($"Casillas Recorridas (por todos los jugadores): [green]{totalOfWalkedCells}[/]");
         finalStats.AddRow($"Trampas Activadas (por todos los jugadores): [green]{totalOfActivatedTraps}[/]");
         finalStats.AddRow($"Trampas Sin Activar: [green]{maze.numberOfTraps - totalOfActivatedTraps}[/]");
-        finalStats.Border = TableBorder.Rounded;
         finalStats.BorderColor(Color.Blue);
 
         AnsiConsole.Write(finalStats);
