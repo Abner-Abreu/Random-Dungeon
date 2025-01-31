@@ -15,7 +15,8 @@ public enum MapSize
     {
         Small,
         Medium,
-        Large
+        Large,
+        Massive
     }
 public partial class GameBoard
 {
@@ -163,13 +164,18 @@ public partial class GameBoard
             _maze[player.position.y, player.position.x] = CellType.Player;
         }
     }
-    public void PrintMaze()
+    public void PrintMaze((int, int) activePlayerPosition)
     {
         for (int y = 0; y < _maze.GetLength(0); y++)
         {
             string row = "";
             for (int x = 0; x < _maze.GetLength(1); x++)
             {
+                if(activePlayerPosition == (x,y))
+                {
+                    row += "[green]██[/]";
+                    continue;
+                }
                 switch (_maze[y,x])
                 {
                     case CellType.Road:

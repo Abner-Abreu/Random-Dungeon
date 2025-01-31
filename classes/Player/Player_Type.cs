@@ -27,7 +27,7 @@ public partial class Player
         while (_energy > 0 && cancelMove == false)
         {
             Console.Clear();
-            board.PrintMaze();
+            board.PrintMaze(position);
             Action move = Console.ReadKey(false).Key switch
             {
                 ConsoleKey.UpArrow => () => Move(board, moveDirection.Up),
