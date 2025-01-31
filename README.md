@@ -1,5 +1,15 @@
 # Random Dungeon
+Random Dungeon se crea bajo la premisa de ofrecer un videojuego multijugador con 
+mapas aleatorios y partidas variadas. En cada partida los jugadores, que pueden ser 2 o 4, 
+construyen su personaje seleccionando entre varias clases con habilidades únicas que les 
+ofrecen estrategias únicas para alcanzar la victoria. Estos personajes son colocados en el 
+mapa previamente generado y tienen como objetivo alcanzar la habitación central lo más 
+rápido posible enfrentándose a dos desafíos principales: descifrar los complejos caminos 
+del laberinto y las diversas trampas que en ellos se esconden, haciendo que en cada 
+movimiento se pueda cambiar completamente tu situación.  
 
+> [!Note]
+> Para obtener un informe completo del proyecto acceder al archivo `Information.pdf` dentro del repositorio  
 
 ## Principales Características
 + Mapa ***generado aleatoriamente***, especialmente para cada partida
