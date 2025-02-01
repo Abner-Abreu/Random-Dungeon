@@ -40,6 +40,7 @@ class Program
         {
             Console.Clear();
             ShowTitle.Invoke();
+            Console.WriteLine();
             Action startMenuAction = AnsiConsole.Prompt(startMenu) switch
             {
                 "Jugar" => () => newGame = true,
@@ -157,7 +158,7 @@ class Program
             foreach (Player activePlayer in playersGroup)
             {
                 Console.Clear();
-                Console.WriteLine();
+                maze.PrintMaze(activePlayer.position);
                 if (activePlayer._energy <= 0) activePlayer._energy += 3;
                 if (activePlayer._mana < 3)activePlayer._mana++;
 

@@ -19,6 +19,8 @@ public partial class Player
             activedTrap.Invoke();
             board.UpdatePlayersPosition(players);
             _numberOfActivatedTraps++;
+            Console.WriteLine();
+            Console.WriteLine("[PRESIONE UNA TECLA PARA CONTINUAR]");
             Console.ReadKey(false);
         }
     }

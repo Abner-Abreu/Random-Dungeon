@@ -46,6 +46,7 @@ Condición de Victoria:
 -Gana el primer jugador en terminar su turno en la habitación del centro del mapa
 Nota: El mapa está plagado de trampas que son invisibles... hasta que caes en ellas ;)
 ");
+        Console.WriteLine("[PRESIONE UNA TECLA PARA CONTINUAR]");
         Console.ReadKey(false);
         Console.Clear();
     }

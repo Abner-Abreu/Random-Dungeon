@@ -95,6 +95,8 @@ public partial class Player
         stateTable.Border = TableBorder.Rounded;
         Console.Clear();
         AnsiConsole.Write(stateTable);
+        Console.WriteLine();
+        Console.WriteLine("[PRESIONE UNA TECLA PARA CONTINUAR]");
         Console.ReadKey(false);
     }
 }
