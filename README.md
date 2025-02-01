@@ -41,7 +41,7 @@
   - Usar Habilidad: El personaje activa su habilidad siempre y cuando cuente con maná suficiente  
   - Terminar Turno: Pasa al turno del siguiente jugador  
 ### 4. Condición de Victoria: ###
-+ Gana el primer jugador en terminar su turno en la habitación del centro del mapa
++ Gana el primer jugador en llegar a la habitación del centro del mapa
 > [!Note]
 > El mapa está plagado de trampas invisibles... hasta que caes en ellas ;)  
 
@@ -60,7 +60,7 @@ A lo largo de todo el tablero están colocadas trampas que son activadas cuando 
 + *Trampa Anti-Maná*: al activar esta trampa el jugador pierde maná (-3 puntos) impidiendo el uso de habilidades o aumentando el tiempo de enfriamiento (si el maná origanal es menor que el perdido queda en negativo aumentando el tiempo de enfriamiento)  
 + *Trampa de Cambio de Pasado*: al activar esta trampa el jugador cambia otra a clase (y a su respectiva habilidad) diferente a la suya elegida al azar
 + *Trampa de Re-Aparición de Trampas*: al activar esta trampa las trampas de todo el mapa se vuelven a generar, cambiando su ubicación y agregando otras nuevas. Primero elimina todas las trampas existentes, entonces vuelve a generar las trampas y actualiza la posición de los jugadores en el mapa
-+ *Trampa de Teletransporte*: al activar esta trampa la posición del jugador cambia (en función de la posición origanl, de manera que se mantenga a una distancia semejante del centro). La nueva posición será siempre una casilla transitable y nunca estará en la habitación central
++ *Trampa de Teletransporte*: al activar esta trampa la posición del jugador cambia (en función de la posición original, de manera que se mantenga a una distancia semejante del centro). La nueva posición será siempre una casilla transitable y nunca estará en la habitación central
 ### Movimiento ###
 Cada personaje puede moverse en cuatro direcciones (`arriba`, `abajo`, `izquierda` y `derecha`) por las casillas transitables mientras tenga energía suficiente  
 + Al seleccionar la opción `Moverse` el jugador usa las flechas del teclado para decidir la dirección de movimiento

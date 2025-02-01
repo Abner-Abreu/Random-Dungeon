@@ -46,11 +46,7 @@ public partial class GameBoard
         _maze[position.y, position.x] = CellType.Road; // Marck cell as road
 
         // Create a list of directions and shuffle it
-        var directions = new (int x, int y)[4];
-        for (int i = 0; i < 4; i++)
-        {
-            directions[i] = (possibleDirections[i].x, possibleDirections[i].y);
-        }
+        var directions = possibleDirections;
 
         // Shuffle directions 
         for (int i = directions.Length - 1; i > 0; i--)
@@ -83,7 +79,7 @@ public partial class GameBoard
             int xNewPosition = position.x + possibleDirections[i].x;
             int yNewPosition = position.y + possibleDirections[i].y;
 
-            // Check if the adjacent cell is visited
+            // Check if the adjacent cell is road
             if (xNewPosition > 0 && xNewPosition < _maze.GetLength(0) - 2 
                 && yNewPosition > 0 && yNewPosition < _maze.GetLength(1) - 2
                 && _maze[yNewPosition, xNewPosition] == CellType.Road)
