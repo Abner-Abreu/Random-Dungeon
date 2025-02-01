@@ -17,6 +17,8 @@ Movimiento de los Personajes:
 ↓ - Abajo
 BackSpace - Dejar de moverse
 ");
+        Console.WriteLine();
+        Console.WriteLine("[PRESIONE UNA TECLA PARA CONTINUAR]");
         Console.ReadKey(false);
         Console.Clear();
     }
@@ -75,13 +77,9 @@ Nota: El mapa está plagado de trampas que son invisibles... hasta que caes en e
         var classes = new Table();
         classes.AddColumns("Clase", "Habilidad", "Descripción");
         classes.AddRow("Guerrero", "Destructor de Muros", "Te inunda la ira y golpeas una pared, destruyendola");
-        classes.AddEmptyRow();
         classes.AddRow("Mago", "Intercambio", "Utilizas tu magia espacial para cambiar tu lugar con alguien elegido por el Vacío");
-        classes.AddEmptyRow();
         classes.AddRow("Explorador", "Instinto", "Usas tus sentidos superiores para encontrar mecanismos ocultos");
-        classes.AddEmptyRow();
         classes.AddRow("Invocador", "Invocar Goblin", "Invocas a un goblin para que desactive las trampas a tu alrededor");
-        classes.AddEmptyRow();
         classes.AddRow("Viajero", "Brisa Refrescante", "Una brisa recorre tu cuerpo, dándote energía para continuar tu camino (+2 de Energía)");
 
         AnsiConsole.Write(classes);

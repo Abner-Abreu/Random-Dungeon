@@ -98,5 +98,6 @@ public partial class Player
         Console.WriteLine();
         Console.WriteLine("[PRESIONE UNA TECLA PARA CONTINUAR]");
         Console.ReadKey(false);
+        Console.Clear();
     }
 }

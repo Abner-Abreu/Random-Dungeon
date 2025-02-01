@@ -24,6 +24,8 @@ public partial class Player
         else
         {
             Console.WriteLine($"Necesitas {3 - _mana} puntos de maná más para activar tu habilidad");
+            Console.WriteLine();
+            Console.WriteLine("[PRESIONE UNA TECLA PARA CONTINUAR]");
             Console.ReadKey(true);
         }
     }
